@@ -16,7 +16,7 @@ class Continent:
     def generatecontinent(self):
         #We need to initiate two vectors to generate more vectors?
         startpos = self.startpos
-        secondpos = (startpos[0]+random.randint(-10,10),startpos[1]+random.randint(-10,10))
+        secondpos = (startpos[0]+random.randint(0,10),startpos[1]+random.randint(0,10)) #Make sure that the first vector is pointed upwards
         self.startvector = Vector(startpos, secondpos)
 
 
