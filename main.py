@@ -1,5 +1,7 @@
-from Classes.map import map
+from Classes.map import Map
 
 
 def main():
-    
+    map = Map()
+    map.generatemapsize()
+
