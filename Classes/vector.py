@@ -1,6 +1,7 @@
-class vector:
+class Vector:
 
-    def __init__(self, nextvector, touple):
+    def __init__(self, firstpos, secondpos, nextvector=None):
         self.nexvector = nextvector
-        self.touple = touple
+        self.firstpos = firstpos
+        self.secondpos = secondpos
 
