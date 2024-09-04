@@ -1,3 +1,6 @@
+<<<<<<< HEAD
+
+=======
 #from Classes.map import map
 import math
 from PIL import Image as img, ImageFont, ImageDraw
@@ -71,3 +74,4 @@ def main():
     draw()
 
 main()
+>>>>>>> ff119dff761eeeb28a2e69d9bb0c9a8d2425f8bc

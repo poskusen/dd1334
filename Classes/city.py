@@ -8,7 +8,6 @@ class city:
         vector_reference = random.choice(pos_reference)
         
 
-
         self.ypos = ypos
         self.xpos = xpos
 
