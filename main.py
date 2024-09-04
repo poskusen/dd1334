@@ -1,4 +1,3 @@
-from Classes.map import Map
 <<<<<<< HEAD
 
 =======
@@ -64,8 +63,6 @@ def draw_vector(canvas, vector, colour, size): #Works
 
 
 def main():
-    map = Map()
-    map.generatemapsize()
     draw()
 
 main()
