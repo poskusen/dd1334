@@ -1,4 +1,4 @@
-from continent import Continent
+from Classes.continent import Continent
 
 class Map:
 
