@@ -28,12 +28,6 @@ class Continent:
 
 
 
-
-
-hejheh
-
-
-
 def test():
     kontinenten = Continent("cool", mapsizetouple=(1000,1000))
     kontinenten.generatestartpos()
