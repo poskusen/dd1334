@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-
-=======
 #from Classes.map import map
 import math
 from PIL import Image as img, ImageFont, ImageDraw
@@ -65,8 +62,9 @@ def draw_text(image, pos, text, size_canvas, object_size):
 
 
 
-def draw_city(canvas, pos, size):
+def draw_city(canvas, pos, size, size_canvas):
     pass
+    
 
 
 
@@ -74,4 +72,3 @@ def main():
     draw()
 
 main()
->>>>>>> ff119dff761eeeb28a2e69d9bb0c9a8d2425f8bc
