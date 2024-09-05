@@ -33,12 +33,12 @@ class Continent:
         # Store the first vector
         self.vectors.append((startpos, secondpos))
 
-        for i in range(150):
+        for i in range(5):
             next_pos = self.generatexypos()
             self.circlevector.secondpos = next_pos
 
             new_vector = Vector(self.currentvector.secondpos, next_pos)
-            self.currentvector.nexvector = new_vector
+            self.currentvector.nextvector = new_vector
             self.currentvector = new_vector
 
             # Store the new vector

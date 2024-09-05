@@ -34,7 +34,7 @@ class Continent:
             self.circlevector.secondpos = next_pos
 
             new_vector = Vector(self.currentvector.secondpos,next_pos)
-            self.currentvector.nexvector = new_vector
+            self.currentvector.nextvector = new_vector
             self.currentvector = new_vector
 
 
