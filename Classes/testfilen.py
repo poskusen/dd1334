@@ -7,66 +7,42 @@ import matplotlib.pyplot as plt
 
 class Continent:
 
-    def __init__(self, name, mapsizetouple, startpos=None, startvector=None, currentvector=None, circlevector=None):
+    def __init__(self, name, mapsizetouple, start_pos=None, start_vector=None, currentvector=None, circlevector=None):
         self.name = name
-        self.startpos = startpos
+        self.start_pos = start_pos
         self.mapsizetouple = mapsizetouple
-        self.startvector = startvector
+        self.start_vector = start_vector
         self.currentvector = currentvector
         self.circlevector = circlevector
         self.vectors = []  # Store all generated vectors for plotting
 
-    def generatestartpos(self):
+    def generatestart_pos(self):
         '''Generates a random starting position for the first continent-vector'''
-        self.startpos = (random.randint(0, self.mapsizetouple[0]), random.randint(0, self.mapsizetouple[1]))
+        self.start_pos = (random.randint(0, self.mapsizetouple[0]), random.randint(0, self.mapsizetouple[1]))
 
     def generatecontinent(self):
         '''Hopefully makes a continent!'''
-        self.generatestartpos()
-        startpos = self.startpos
+        self.generatestart_pos()
+        start_pos = self.start_pos
+        self.vectors.append(start_pos)
 
-        secondpos = (startpos[0] + random.randint(1, 10), startpos[1] + random.randint(1, 10))  # First vector
-        self.startvector = Vector(startpos, secondpos)
-        self.currentvector = self.startvector
-        self.circlevector = Vector(startpos, secondpos)
+        secondpos = (start_pos[0] + random.randint(1, 10), start_pos[1] + random.randint(1, 10))  # First vector
+        self.vectors.append(secondpos)
 
-        # Store the first vector
-        self.vectors.append((startpos, secondpos)) # Behöver vi verkligen stora, annars behöver de inte vara länkade
-
-<<<<<<< HEAD
-        for i in range(20):
-=======
         for i in range(5):
->>>>>>> refs/remotes/origin/main
-            next_pos = self.generatexypos()
-            self.circlevector.secondpos = next_pos
-
-            new_vector = Vector(self.currentvector.secondpos, next_pos)
-            self.currentvector.nextvector = new_vector
-            self.currentvector = new_vector
-
+            next_pos = self.generatexypos(working_vector)
+            working_vector = next_pos
+     
             # Store the new vector
-            self.vectors.append((self.currentvector.firstpos, next_pos))
+            self.vectors.append(next_pos)
 
     def generatexypos(self):
         '''Generate new xy-position without going outside the canvas and without generating a new vector with an angle greater than 90 or less than -90 degrees'''
         while True:
 
-            xrandom = self.currentvector.secondpos[0] + random.randint(-15, 15)
-            yrandom = self.currentvector.secondpos[1] + random.randint(-15, 15)
+            #generate the norm to the vector
 
-            if xrandom != 0 and yrandom != 0:  # Avoid division by 0
-                next_pos = (xrandom, yrandom)
-                tempvector = Vector(self.currentvector.secondpos, next_pos)
-
-                v = (tempvector.secondpos[0] - tempvector.firstpos[0], tempvector.secondpos[1] - tempvector.firstpos[1])
-                norm_v = np.linalg.norm(v)
-
-                if (-90 < self.vectorangle(self.circlevector, tempvector) < 90 and
-                        0 < next_pos[0] < self.mapsizetouple[0] and
-                        0 < next_pos[1] < self.mapsizetouple[1] and
-                        norm_v != 0):
-                    return next_pos
+            return
 
     def vectorangle(self, firstvectorobject, secondvectorobject):
         '''Calculates the angle between two vectors'''
@@ -107,7 +83,7 @@ class Continent:
 
 def test():
     kontinenten = Continent("cool", mapsizetouple=(1000, 1000))
-    kontinenten.generatestartpos()
+    kontinenten.generatestart_pos()
     kontinenten.generatecontinent()
     kontinenten.plot_vectors()  # Call the plotting function
 
