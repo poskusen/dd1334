@@ -31,13 +31,9 @@ class Continent:
         self.circlevector = Vector(startpos, secondpos)
 
         # Store the first vector
-        self.vectors.append((startpos, secondpos)) # Behöver vi verkligen stora, annars behöver de inte vara länkade
+        self.vectors.append((startpos, secondpos)) # Behöver vi verkligen storea, annars behöver de inte vara länkade
 
-<<<<<<< HEAD
-        for i in range(20):
-=======
-        for i in range(5):
->>>>>>> refs/remotes/origin/main
+        for i in range(100):
             next_pos = self.generatexypos()
             self.circlevector.secondpos = next_pos
 
