@@ -26,7 +26,7 @@ class Continent:
         start_pos = self.start_pos
         self.vectors.append(start_pos)
 
-        secondpos = (startpos[0] + random.randint(1, 10), startpos[1] + random.randint(1, 10))  # First vector
+        secondpos = (start_pos[0] + random.randint(1, 10), start_pos[1] + random.randint(1, 10))  # First vector
         self.startvector = Vector(startpos, secondpos)
         self.currentvector = self.startvector
         self.circlevector = Vector(startpos, secondpos)

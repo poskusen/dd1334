@@ -6,10 +6,10 @@ class Vector:
         self.secondpos = secondpos
 
     def get_length(self):
-        return math.sqrt((self.secondpos[0]-self.firstpos[0])^2 + (self.secondpos[1]-self.firstpos[1])^2)
+        return math.sqrt((self.secondpos[0]-self.firstpos[0])**2 + (self.secondpos[1]-self.firstpos[1])**2)
 
     def get_extended_vector(self, size):
-        return (self.secondpos, (self.secondpos[0] + self.secondpos[0] - self.firstpos[0], self.secondpos[1] + self.secondpos[1] - self.firstpos[1])) # Gör så att den är rätt längd
+        return (self.secondpos, (self.secondpos[0] + self.secondpos[0] - self.firstpos[0], self.secondpos[1] + self.secondpos[1] - self.firstpos[1])) # Gï¿½r sï¿½ att den ï¿½r rï¿½tt lï¿½ngd
 
     def get_x_end(self):
         return self.secondpos[0]

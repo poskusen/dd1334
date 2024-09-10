@@ -12,7 +12,7 @@ class Continent:
         self.start_pos = startpos
         self.mapsize_touple = mapsize_touple
         self.start_vector = start_vector
-        self.circle_vector = circle_vectortest_vector_1
+        self.circle_vector = (0, 1)
         self.size = size
         self.vector_size = 100
         self.vectors = []  # Store all generated vectors for plotting
@@ -23,28 +23,35 @@ class Continent:
         next_pos = (self.start_pos[0] + random.uniform(-self.size/self.vector_size, self.size/self.vector_size), self.start_pos[1] + random.uniform(-self.size/self.vector_size, self.size/self.vector_size))
         self.vectors.append(next_pos)
         current_pos = next_pos
+        next_pos = (self.start_pos[0] + random.uniform(-self.size/self.vector_size, self.size/self.vector_size), self.start_pos[1] + random.uniform(-self.size/self.vector_size, self.size/self.vector_size))
+        self.vectors.append(next_pos)
+        current_pos = next_pos
+        #Ta bort sen
+
 
         #while self.circle_vector.get_length() < self.size:
             #next_pos = self.generate_new_pos()
             #self.vectors.append(next_pos)
         
-        while self.vector[-1] != self.startpos:
+        #while self.vectors[-1] != self.start_pos:
+        for i in range(59):
             next_pos = self.generate_new_pos(current_pos)
             self.vectors.append(next_pos)
             current_pos = next_pos
 
-    def generate_new_pos(self, current_pos, tendency = None): # fixa så att vinkeln väljs så vi inte går ut
+    def generate_new_pos(self, current_pos, tendency = None): # fixa sï¿½ att vinkeln vï¿½ljs sï¿½ vi inte gï¿½r ut
        
-        if Vector(current_pos, self.vectors[-1]).get_length() < self.size/100: # If we are close enough, just return the start position
-            return self.vectors[-1]
-        else:
+        #if Vector(current_pos, self.vectors[-1]).get_length() < self.size/100: # If we are close enough, just return the start position
+            #return self.vectors[-1]
+        
+        if True: #else
             length_new_vector = random.random()*(self.size/self.vector_size)
             extended_vector = Vector(self.vectors[-1], self.vectors[-2]).get_extended_vector(length_new_vector)
-            random_angle = random.gauss(0,1.5)*math.pi/10-math.pi/30
+            random_angle = random.gauss(0, 1.5)*math.pi - math.pi/30
             
             x_rotated = extended_vector[0][0] + math.cos(random_angle)*(extended_vector[1][0]-extended_vector[0][0])
             y_rotated = extended_vector[0][1] + math.sin(random_angle)*(extended_vector[1][1]-extended_vector[0][1])
-            return (self.vectors[-1],(x_rotated, y_rotated))
+            return (x_rotated, y_rotated)
 
 
     def vectorangle(self, firstvectorobject, secondvectorobject):
@@ -70,10 +77,11 @@ class Continent:
         return vectorangle
 
     def plot_vectors(self):
+        print(self.vectors)
         '''Plot the vectors in 2D space'''
         plt.figure(figsize=(10, 10))
-        for start, end in self.vectors:
-            plt.plot([start[0], end[0]], [start[1], end[1]], marker='o')
+        for i in range(0,len(self.vectors - 1)):
+            plt.plot([self.vectors[i][0], self.vectors[i][1]], [self.vectors[i + 1][0], self.vectors[i + 1][1]], marker='o')
 
         plt.xlim(0, self.mapsize_touple[0])
         plt.ylim(0, self.mapsize_touple[1])
@@ -86,7 +94,7 @@ class Continent:
 
 def test():
     kontinenten = Continent("cool", mapsize_touple=(1000, 1000), size = 200)
-    kontinenten.generate_continent()
+    kontinenten.generate_continent(200)
     kontinenten.plot_vectors()  # Call the plotting function
 
 
