@@ -15,28 +15,40 @@ class Continent():
             self.vectors.append(start_pos)
         else:
             #self.start_pos = (random.randint(0, self.mapsize_touple[0]), random.randint(0, self.mapsize_touple[1]))
-            self.start_pos = (500,500)
+            self.start_pos = (500,500) # Bättre att generera i mitten och sen flytta hela kontinenten
             self.vectors = []
             self.vectors.append(self.start_pos)
-        self.circle_vector = (0, 1) # Implementera senare
+        self.circle_vector = (0,0) # Implementera senare
         self.size_continent = size_continent
-        self.vector_size = 10 # Fixa så den beror på storleken av kontinenten
+        self.vector_size = 50 # Fixa så den beror på storleken av kontinenten
     
     def generate(self):
         point = self.start_pos
         next_point = (self.start_pos[0] + random.uniform(-1,1)*self.vector_size, self.start_pos[1] + random.uniform(-1,1)*self.vector_size)
         self.vectors.append(next_point)
+        self.circle_vector = (point, next_point)
+        steps_away = 1
 
         for i in range(50): # Byt till kondition sen
             point_holder = next_point
             next_point = self.generate_new_point(point, next_point)
             point = point_holder
+            self.circle_vector = (point, next_point)
             self.vectors.append(next_point)
+            steps_away += 1
+
+            if math.sqrt((next_point[0] - self.start_pos[0])**2 + (next_point[1] - self.start_pos[1])**2) < self.vector_size*2 and steps_away > 6:
+                self.vectors.append(self.start_pos)
+                break
             
 
     def generate_new_point(self, point1, point2):
         length = random.uniform(1, 1) * self.vector_size
-        angle = random.gauss(math.pi*(1.01), math.pi/60) # Skapa en slumpmässig vinkel
+        if self.get_length_vector(self.circle_vector)/self.mapsize_touple[0] > 0.5:
+            mu = math.pi*(1.2)
+        else:
+            mu = math.pi*(1.1)
+        angle = random.gauss(math.pi*(1.1), math.pi/10) # Skapa en slumpmässig vinkel
         return self.rotate_vector(point1, point2, length, angle)
 
     def rotate_vector(self, point1, point2, length, angle): #point 1 and 2 är den senaste vektorn, alltså därifrån vi ska generera från
@@ -72,6 +84,9 @@ class Continent():
         plt.ylabel('Y coordinate')
         plt.grid()
         plt.show()
+    
+    def get_length_vector(self, vector):
+        return math.sqrt((vector[0][0] - vector[1][0])**2 + (vector[0][1] - vector[1][1])**2)
 
 def test():
     test_cont = Continent('test', (1000,1000), 100)
