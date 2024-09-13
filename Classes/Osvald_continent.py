@@ -50,7 +50,8 @@ class Continent():
                 self.vectors.add_next(self.start_node)
                 self.vectors = self.start_node
                 break
-        self.fix_intersects()            
+        if not self.fix_intersects():
+            self.generate()
 
     def generate_new_point(self, point1, point2):
         length = random.uniform(0, 1) * self.vector_size
@@ -110,23 +111,15 @@ class Continent():
         while working_node_next is not self.start_node:
             node_1 = working_node_next.get_next()
             node_2 = node_1.get_next()
-    
-            while node_2.get_next() is not self.start_node:
-                print('Working node: ' + str(working_node.get_data()))
-                print('Working node next: ' + str(working_node_next.get_data()))
-                print('node 1: ' + str(node_1.get_data()))
-                print('node 2 ' + str(node_2.get_data()))
-                print('start_node' + self.start_node.get_data())
+            while node_2 is not self.start_node:
                 if self.crosses((working_node, working_node_next), (node_1, node_2)):
-                    
-                    working_node.add_next(node_2)
-                    working_node = node_2
-                    working_node_next = working_node.get_next()
-                    break
+                    return False
                 node_1 = node_1.get_next()
                 node_2 = node_1.get_next()
             working_node = working_node.get_next()
             working_node_next = working_node.get_next()
+        return True
+            
 
 
     def crosses(self, vector1, vector2):
@@ -134,11 +127,16 @@ class Continent():
         (x2, y2) = vector1[1].get_data()
         (x3, y3) = vector2[0].get_data()
         (x4, y4) = vector2[1].get_data()
-        s_factor = (x1 - x2, y1 - y2)
-        t_factor = (x3 - x4, y3 - y4)
+        s_factor = (x2 - x1, y2 - y1)
+        t_factor = (x4 - x3, y4 - y3)
         right_side = np.array([x3 - x1, y3 - y1])
         left_side = np.array([[s_factor[0], -t_factor[0]], [s_factor[1], -t_factor[1]]])
+        det = np.linalg.det(left_side)
+        if abs(det) < 1e-10:  # Small tolerance to handle floating point errors
+            return False  # Consider as no intersection in this special case
         solution = np.linalg.inv(left_side).dot(right_side)
+        
+
         s = solution[0]
         t = solution[1]
         if 0 <= s <= 1 and 0 <= t <= 1:
