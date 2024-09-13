@@ -16,7 +16,7 @@ class river:
         self.river_size = size_continent / self.count_vectors()  # Make up some arbitrary way to generate river_size
 
         if self.rivers_count is None:
-            river_percent = 0.2 * river_weight / 100  # Calculates how many vectors in continent that will have a river, max 40% (CAN BE CHANGED)
+            river_percent = 0.3 * river_weight / 100  # Calculates how many vectors in continent that will have a river, max 40% (CAN BE CHANGED)
             self.rivers_count = int((self.count_vectors() * river_percent))  # Number of rivers can be dynamic
 
         for i in range(self.rivers_count):  # Appends the river positions (positions in the vector list)
