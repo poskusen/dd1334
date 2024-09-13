@@ -1,170 +1,166 @@
+import matplotlib.pyplot as plt
 import random
 import math
-import matplotlib.pyplot as plt
+import numpy as np
 
 
-class Continent():
+class river:
+    def __init__(self, continent, river_weight=100, size_continent=100):  # river_weight assumed to be value 1-100
+        self.continent = continent
+        self.river_weight = river_weight
 
-    def __init__(self, name, mapsize_touple, size_continent, start_pos=None):
-        self.name = name
-        self.mapsize_touple = mapsize_touple
-        if start_pos is not None:
-            self.start_pos = start_pos
-        else:
-            # Start in the middle of the map
-            self.start_pos = (500, 500)
-        self.vectors = [self.start_pos]
-        self.size_continent = size_continent
-        self.vector_size = 800 * size_continent / mapsize_touple[0]  # Scale vector size based on continent size
+        self.rivers_count = None
+        self.river_lists = []
+        self.river_positions = []
 
-    def generate(self):
-        point = self.start_pos
-        next_point = (self.start_pos[0] + random.uniform(-1, 1) * self.vector_size,
-                      self.start_pos[1] + random.uniform(-1, 1) * self.vector_size)
-        self.vectors.append(next_point)
-        steps_away = 1
+        self.river_size = size_continent / self.count_vectors()  # Make up some arbitrary way to generate river_size
 
+        if self.rivers_count is None:
+            river_percent = 0.2 * river_weight / 100  # Calculates how many vectors in continent that will have a river, max 40% (CAN BE CHANGED)
+            self.rivers_count = int((self.count_vectors() * river_percent))  # Number of rivers can be dynamic
+
+        for i in range(self.rivers_count):  # Appends the river positions (positions in the vector list)
+            pos = random.randint(0, (self.count_vectors()) - 1)
+            self.river_positions.append(pos)
+
+    def generate_river(self):
+        for i in range(self.rivers_count):
+            temp_river = []
+            river_pos = self.river_positions[i]
+            pos_1 = self.continent[river_pos]
+            pos_2 = self.continent[river_pos - 1]
+            direction = self.normal_vector(pos_1, pos_2)
+
+            mid_point = self.midpoint(pos_1, pos_2)
+
+            pos_3 = (
+                mid_point[0] + direction[0], mid_point[1] + direction[1])  # This is the initialized vector for the river
+
+            temp_river.append(mid_point)  # First vector first position that intersects continent border
+            temp_river.append(pos_3)  # First vector second position
+
+            for _ in range(30):  # Makes 30 river vectors
+                next_pos = self.generate_xy_pos(pos_3, mid_point, pos_3)
+                temp_river.append(next_pos)
+
+                mid_point = pos_3
+                pos_3 = next_pos
+
+            self.river_lists.append(temp_river)
+
+    def generate_xy_pos(self, last_touple, u1, u2):
+        '''Generate new xy-position without going outside the canvas and without generating a new vector with an angle greater than 90 or less than -90 degrees.'''
         while True:
-            point_holder = next_point
-            next_point = self.generate_new_point(point, next_point)
+            xrandom = last_touple[0] + random.randint(-5, 5)
+            yrandom = last_touple[1] + random.randint(-5, 5)
 
-            point = point_holder
-            self.vectors.append(next_point)
-            steps_away += 1
+            if xrandom != 0 and yrandom != 0:  # Make sure that we do not get the same position resulting in division by 0
+                next_pos = (xrandom, yrandom)
 
-            # Stop when the shape comes near the starting point and has enough steps
-            if math.sqrt((next_point[0] - self.start_pos[0]) ** 2 + (
-                    next_point[1] - self.start_pos[1]) ** 2) < self.vector_size and steps_away > 10:
-                self.vectors.append(self.start_pos)
-                break
+                v = (xrandom - last_touple[0], yrandom - last_touple[1])
+                norm_v = np.linalg.norm(v)
 
-        # After generation, remove intersections
-        self.remove_intersections()
+                first_vector = (u2[0] - u1[0], u2[1] - u1[1])  # First Vector
+                tempvector = (xrandom - last_touple[0], yrandom - last_touple[1])
 
-        # Then reconnect nearby points to form a continuous continent
-        self.reconnect_points()
+                if -30 < self.vectorangle(first_vector, tempvector) < 30 and norm_v != 0:
+                    return next_pos
 
-    def generate_new_point(self, point1, point2):
-        length = random.uniform(0, 1) * self.vector_size
-        mu = math.pi * 1.1
-        angle = random.gauss(mu, math.pi / 10)  # Generate a random angle
-        return self.rotate_vector(point1, point2, length, angle)
+    def vectorangle(self, first_vector, second_vector):
+        u = first_vector
+        v = second_vector
+        '''Calculates the angle between two vectors.'''
+        dot_product = u[0] * v[0] + u[1] * v[1]
 
-    def rotate_vector(self, point1, point2, length, angle):
-        '''Rotates vector point1 -> point2 by angle'''
-        fx, fy = point2
-        x, y = point1
+        norm_v = np.linalg.norm(v)
+        norm_u = np.linalg.norm(u)
 
-        x_rot = ((x - fx) * math.cos(angle)) - ((y - fy) * math.sin(angle)) + fx
-        y_rot = ((x - fx) * math.sin(angle)) + ((y - fy) * math.cos(angle)) + fy
+        # Check for zero vectors
+        if norm_u == 0 or norm_v == 0:
+            return 0  # or any value that makes sense for your application
 
-        # Scale the vector
-        return self.scale_vector(point2, (x_rot, y_rot), length)
+        cos_theta = dot_product / (norm_u * norm_v)
 
-    def scale_vector(self, point1, point2, length):
-        '''Returns a point that scales the vector from point1 to point2 to a given length'''
-        fx, fy = point1
-        x_rot, y_rot = point2
-        dx = fx - x_rot
-        dy = fy - y_rot
-        curr_len = math.sqrt(dx ** 2 + dy ** 2)
+        cos_theta = max(-1, min(1, cos_theta))
 
-        scale_factor = length / curr_len
-        x_new = scale_factor * (x_rot - fx)
-        y_new = scale_factor * (y_rot - fy)
+        angle_radians = math.acos(cos_theta)
 
-        return (x_new + fx, y_new + fy)
+        vectorangle = math.degrees(angle_radians)
 
-    def get_length_vector(self, p1, p2):
-        return math.sqrt((p2[0] - p1[0]) ** 2 + (p2[1] - p1[1]) ** 2)
+        return vectorangle
 
-    def remove_intersections(self):
-        ''' Check for intersections between all vector pairs and remove intersecting vectors '''
-        i = 0
-        vectors_to_keep = [self.vectors[0]]  # Always keep the starting point
-        while i < len(self.vectors) - 2:
-            keep = True
-            for j in range(i + 2, len(self.vectors) - 1):  # Check non-adjacent vectors for intersections
-                if self.check_intersection(self.vectors[i], self.vectors[i + 1], self.vectors[j], self.vectors[j + 1]):
-                    keep = False
-                    break
-            if keep:
-                vectors_to_keep.append(self.vectors[i + 1])
-            i += 1
+    def normal_vector(self, p1, p2):
+        # Calculate the direction vector
+        direction_vector = (p2[0] - p1[0], p2[1] - p1[1])
 
-        # Add the last vector (closing the loop)
-        vectors_to_keep.append(self.vectors[-1])
-        self.vectors = vectors_to_keep  # Update vectors after removing intersections
+        # Calculate the normal vector (90 degrees counterclockwise)
+        normal = (-direction_vector[1], direction_vector[0])
 
-    def check_intersection(self, p1, p2, p3, p4):
-        ''' Check if line segment (p1, p2) intersects with line segment (p3, p4) '''
+        # Calculate the magnitude of the normal vector
+        magnitude = math.sqrt(normal[0] ** 2 + normal[1] ** 2)
 
-        def orientation(p, q, r):
-            val = (q[1] - p[1]) * (r[0] - q[0]) - (q[0] - p[0]) * (r[1] - q[1])
-            if val == 0:
-                return 0  # collinear
-            elif val > 0:
-                return 1  # clockwise
-            else:
-                return 2  # counterclockwise
+        # Normalize the normal vector (make it unit length)
+        if magnitude != 0:
+            normal = (normal[0] / magnitude, normal[1] / magnitude)
+            normal = (
+                normal[0] * -5, normal[1] * -5)  # Without - and 5 they are pointing in the wrong direction + too small
+        else:
+            normal = (0, 0)  # Handle the case where the magnitude is zero
 
-        def on_segment(p, q, r):
-            return min(p[0], r[0]) <= q[0] <= max(p[0], r[0]) and min(p[1], r[1]) <= q[1] <= max(p[1], r[1])
+        return normal
 
-        o1 = orientation(p1, p2, p3)
-        o2 = orientation(p1, p2, p4)
-        o3 = orientation(p3, p4, p1)
-        o4 = orientation(p3, p4, p2)
+    def midpoint(self, point1, point2):
+        """Calculate the midpoint between two points."""
+        mid_x = (point1[0] + point2[0]) / 2
+        mid_y = (point1[1] + point2[1]) / 2
+        return (mid_x, mid_y)
 
-        if o1 != o2 and o3 != o4:
-            return True
+    def count_vectors(self):
+        """Return number of vectors in continent."""
+        return len(self.continent)
 
-        if o1 == 0 and on_segment(p1, p3, p2):
-            return True
 
-        if o2 == 0 and on_segment(p1, p4, p2):
-            return True
+def plot_continent_and_rivers(continent, river_lists):
+    plt.figure(figsize=(10, 10))
 
-        if o3 == 0 and on_segment(p3, p1, p4):
-            return True
+    # Plot the continent
+    continent_x, continent_y = zip(*continent)
+    plt.plot(continent_x, continent_y, color='green', label='Continent', linewidth=2)
 
-        if o4 == 0 and on_segment(p3, p2, p4):
-            return True
+    # Plot the rivers with thicker lines
+    for river in river_lists:
+        river_x, river_y = zip(*river)
+        plt.plot(river_x, river_y, color='blue', linewidth=2, linestyle='-', label='River')  # Increased linewidth to 2
 
-        return False
-
-    def reconnect_points(self):
-        ''' Reconnect points that are close to each other after removing intersections '''
-        threshold_distance = self.vector_size * 1.5  # Set a threshold distance to reconnect points
-        i = 0
-        while i < len(self.vectors) - 1:
-            if self.get_length_vector(self.vectors[i], self.vectors[i + 1]) > threshold_distance:
-                # If points are far apart, insert a new point between them
-                mid_point = ((self.vectors[i][0] + self.vectors[i + 1][0]) / 2,
-                             (self.vectors[i][1] + self.vectors[i + 1][1]) / 2)
-                self.vectors.insert(i + 1, mid_point)
-            i += 1
-
-    def plot(self):
-        ''' Plots the generated continent '''
-        plt.figure(figsize=(10, 10))
-        x, y = zip(*self.vectors)
-        plt.plot(x, y, marker='o', linestyle='-')
-        plt.xlim(0, self.mapsize_touple[0])
-        plt.ylim(0, self.mapsize_touple[1])
-        plt.title(f'Vectors for {self.name}')
-        plt.xlabel('X coordinate')
-        plt.ylabel('Y coordinate')
-        plt.grid()
-        plt.show()
+    plt.title('Continent and Rivers')
+    plt.xlabel('X Coordinate')
+    plt.ylabel('Y Coordinate')
+    plt.axis('equal')
+    plt.grid()
+    plt.legend()
+    plt.show()
 
 
 def test():
-    for i in range(10):
-        test_cont = Continent('test', (1000, 1000), 100)
-        test_cont.generate()
-        test_cont.plot()
-        print(test_cont.vectors)
+    continent = [(500, 500), (561.0320489811663, 496.76426233680036), (614.6723780055507, 536.163370800318),
+                 (644.0822612505784, 567.1471724315649), (662.5499586980152, 585.7461098734568),
+                 (662.6786905682109, 586.1011225956856), (653.3303362417543, 618.954828820058),
+                 (625.7282457881066, 693.6354948271372), (613.4196220928332, 729.5127538935301),
+                 (597.3321915440589, 756.2401294664818), (574.4593951463479, 775.1386188767792),
+                 (562.0202255523436, 778.0442973529632), (506.75438593080906, 733.1540091973247),
+                 (503.18114278654167, 729.5095661794837), (455.53683199771416, 707.8886412192259),
+                 (444.2925867059378, 694.7874314835107), (439.8039075548508, 619.0313982222536),
+                 (455.64769693279703, 568.5868069515998), (484.29588455909953, 562.1353332826781), (500, 500)]
+
+    test_river = river(continent)
+    print(test_river.count_vectors())
+    print(test_river.river_positions)
+
+    test_river.generate_river()
+    print(test_river.river_lists)
+
+    # Plot the continent and rivers
+    plot_continent_and_rivers(continent, test_river.river_lists)
 
 
 test()
