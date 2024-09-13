@@ -1,7 +1,6 @@
 import random
 import numpy as np
 import math
-from vector import Vector
 from Linked_list import Node
 import matplotlib.pyplot as plt
 
@@ -48,10 +47,10 @@ class Continent():
 
             if math.sqrt((next_point[0] - self.start_pos[0])**2 + (next_point[1] - self.start_pos[1])**2) < self.vector_size and steps_away > 20:
                 
-                self.vectors.add_next(Node(self.start_pos))
+                self.vectors.add_next(self.start_node)
                 self.vectors = self.start_node
                 break
-            
+        self.fix_intersects()            
 
     def generate_new_point(self, point1, point2):
         length = random.uniform(0, 1) * self.vector_size
@@ -104,16 +103,59 @@ class Continent():
         length_2 = self.get_length_vector(vector2)
         return math.acos(dot_product/(length_1*length_2))
 
-    def closest_wall(point): #Kollar vilken riktning så vi inte direkt åker in i vägg
-        pass
+    def fix_intersects(self): # Loppar igenom alla nodsen och kolla om x och y koordinaterna intersectar
+        working_node = self.start_node.get_next()
+        working_node_next = working_node.get_next()
+        
+        while working_node_next is not self.start_node:
+            node_1 = working_node_next.get_next()
+            node_2 = node_1.get_next()
+    
+            while node_2.get_next() is not self.start_node:
+                print('Working node: ' + str(working_node.get_data()))
+                print('Working node next: ' + str(working_node_next.get_data()))
+                print('node 1: ' + str(node_1.get_data()))
+                print('node 2 ' + str(node_2.get_data()))
+                print('start_node' + self.start_node.get_data())
+                if self.crosses((working_node, working_node_next), (node_1, node_2)):
+                    
+                    working_node.add_next(node_2)
+                    working_node = node_2
+                    working_node_next = working_node.get_next()
+                    break
+                node_1 = node_1.get_next()
+                node_2 = node_1.get_next()
+            working_node = working_node.get_next()
+            working_node_next = working_node.get_next()
 
+
+    def crosses(self, vector1, vector2):
+        (x1, y1) = vector1[0].get_data()
+        (x2, y2) = vector1[1].get_data()
+        (x3, y3) = vector2[0].get_data()
+        (x4, y4) = vector2[1].get_data()
+        s_factor = (x1 - x2, y1 - y2)
+        t_factor = (x3 - x4, y3 - y4)
+        right_side = np.array([x3 - x1, y3 - y1])
+        left_side = np.array([[s_factor[0], -t_factor[0]], [s_factor[1], -t_factor[1]]])
+        solution = np.linalg.inv(left_side).dot(right_side)
+        s = solution[0]
+        t = solution[1]
+        if 0 <= s <= 1 and 0 <= t <= 1:
+            return True
+        else:
+            return False
+        
     def plot(self): #Funkar
         plt.figure(figsize=(10, 10))
         x = []
         y = []
         start_point = self.vectors
-
-        while start_point.get_next():
+        (x_temp, y_temp) = start_point.get_data()
+        x.append(x_temp)
+        y.append(y_temp)
+        start_point = start_point.get_next()
+        while start_point is not self.start_node:
             (x_temp, y_temp) = start_point.get_data()
             x.append(x_temp)
             y.append(y_temp)
@@ -121,6 +163,7 @@ class Continent():
         (x_temp, y_temp) = start_point.get_data()
         x.append(x_temp)
         y.append(y_temp)
+        
         plt.plot(x, y, marker='o', linestyle='-')
         plt.xlim(0, self.mapsize_touple[0])
         plt.ylim(0, self.mapsize_touple[1])
