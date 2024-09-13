@@ -2,6 +2,7 @@ import random
 import numpy as np
 import math
 from vector import Vector
+from Linked_list import Node
 import matplotlib.pyplot as plt
 
 class Continent():
@@ -11,13 +12,14 @@ class Continent():
         self.mapsize_touple = mapsize_touple
         if start_pos != None:
             self.start_pos = start_pos
-            self.vectors = []
-            self.vectors.append(start_pos)
+            self.start_node = Node(self.start_pos)
+            self.vectors = self.start_node
         else:
             #self.start_pos = (random.randint(0, self.mapsize_touple[0]), random.randint(0, self.mapsize_touple[1]))
             self.start_pos = (500,500) # Bättre att generera i mitten och sen flytta hela kontinenten
-            self.vectors = []
-            self.vectors.append(self.start_pos)
+            self.start_node = Node(self.start_pos)
+            self.vectors = self.start_node
+
         self.circle_vector = (0,0) # Implementera senare
         self.size_continent = size_continent
         self.vector_size = 800*size_continent/mapsize_touple[0] # Fixa så den beror på storleken av kontinenten
@@ -25,20 +27,29 @@ class Continent():
     def generate(self):
         point = self.start_pos
         next_point = (self.start_pos[0] + random.uniform(-1,1)*self.vector_size, self.start_pos[1] + random.uniform(-1,1)*self.vector_size)
-        self.vectors.append(next_point)
+        new_node = Node(next_point)
+        self.vectors.add_next(new_node)
+        self.vectors = new_node
+        
         self.circle_vector = (point, next_point)
         steps_away = 1
 
         while True: # Byt till kondition sen
+            
             point_holder = next_point
             next_point = self.generate_new_point(point, next_point)
             point = point_holder
             self.circle_vector = (self.start_pos, next_point) # Behövs inte
-            self.vectors.append(next_point)
+            new_node = Node(next_point)
+            self.vectors.add_next(new_node)
+            self.vectors = new_node
+
             steps_away += 1
 
-            if math.sqrt((next_point[0] - self.start_pos[0])**2 + (next_point[1] - self.start_pos[1])**2) < self.vector_size and steps_away > 10:
-                self.vectors.append(self.start_pos)
+            if math.sqrt((next_point[0] - self.start_pos[0])**2 + (next_point[1] - self.start_pos[1])**2) < self.vector_size and steps_away > 20:
+                
+                self.vectors.add_next(Node(self.start_pos))
+                self.vectors = self.start_node
                 break
             
 
@@ -46,7 +57,6 @@ class Continent():
         length = random.uniform(0, 1) * self.vector_size
         if self.get_length_vector(self.circle_vector)/self.size_continent > 3:
             point1 = self.scale_vector(point2, self.start_pos, self.vector_size)
-            print('nu')
             mu = -math.pi*0.3
         else:
             mu = math.pi*(1.1)
@@ -99,7 +109,18 @@ class Continent():
 
     def plot(self): #Funkar
         plt.figure(figsize=(10, 10))
-        x, y = zip(*self.vectors)
+        x = []
+        y = []
+        start_point = self.vectors
+
+        while start_point.get_next():
+            (x_temp, y_temp) = start_point.get_data()
+            x.append(x_temp)
+            y.append(y_temp)
+            start_point = start_point.get_next()
+        (x_temp, y_temp) = start_point.get_data()
+        x.append(x_temp)
+        y.append(y_temp)
         plt.plot(x, y, marker='o', linestyle='-')
         plt.xlim(0, self.mapsize_touple[0])
         plt.ylim(0, self.mapsize_touple[1])
@@ -113,8 +134,8 @@ class Continent():
         return math.sqrt((vector[0][0] - vector[1][0])**2 + (vector[0][1] - vector[1][1])**2)
 
 def test():
-    for i in range(10):
-        test_cont = Continent('test', (1000,1000), 100)
+    while True:
+        test_cont = Continent('test', (1000,1000), 200)
         test_cont.generate()
         test_cont.plot()
 
