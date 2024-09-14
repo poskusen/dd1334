@@ -5,16 +5,16 @@ import numpy as np
 from matplotlib.path import Path
 
 class River:
-    def __init__(self, continent, river_weight=100, size_continent=100):
+    def __init__(self, continent, river_scale=100, size_continent=100):
         self.continent = continent
-        self.river_weight = river_weight
+        self.river_scale = river_scale
         self.rivers_count = None
         self.river_lists = []
         self.river_positions = []
         self.river_size = size_continent / self.count_vectors()
 
         if self.rivers_count is None:
-            river_percent = 0.3 * river_weight / 100
+            river_percent = 0.3 * river_scale / 100
             self.rivers_count = int(self.count_vectors() * river_percent)
 
         for i in range(self.rivers_count):
@@ -22,6 +22,7 @@ class River:
             self.river_positions.append(pos)
 
     def generate_river(self):
+        """Gemerates rovers_count rivers and appends them to river_lists"""
         for i in range(self.rivers_count):
             temp_river = []
             river_pos = self.river_positions[i]
@@ -44,6 +45,7 @@ class River:
             self.river_lists.append(temp_river)
 
     def generate_xy_pos(self, last_touple, u1, u2):
+        """Genera"""
         while True:
             xrandom = last_touple[0] + random.randint(-5, 5)
             yrandom = last_touple[1] + random.randint(-5, 5)
