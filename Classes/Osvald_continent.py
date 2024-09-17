@@ -1,9 +1,32 @@
 import random
 import numpy as np
 import math
-from Linked_list import Node
-import matplotlib.pyplot as plt
 
+import matplotlib.pyplot as plt
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+    def add_next(self, Node):
+        self.next = Node
+
+    def get_next(self):
+        return self.next
+    
+    def get_data(self):
+        return self.data
+    
+    def leads_to_end(self, end_node):
+        max_iteration = 1000
+        iterations = 0
+        node = self.get_next()
+        while node is not end_node and iterations < max_iteration:
+            iterations += 1
+        else:
+            return True
+        return False
+    
 class Continent():
 
     def __init__(self, name, mapsize_touple, size_continent, start_pos=None, start_vector=None, circle_vector=None):
@@ -174,10 +197,10 @@ class Continent():
     def get_length_vector(self, vector):
         return math.sqrt((vector[0][0] - vector[1][0])**2 + (vector[0][1] - vector[1][1])**2)
 
+    def get_start_node(self):
+        return self.start_node
 def test():
-    while True:
-        test_cont = Continent('test', (1000,1000), 200)
-        test_cont.generate()
-        test_cont.plot()
+    test_cont = Continent('test', (1000,1000), 200)
+    test_cont.generate()
+    test_cont.plot()
 
-test()
