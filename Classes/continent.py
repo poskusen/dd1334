@@ -77,10 +77,8 @@ class Continent():
                 break
         #if not self.fix_intersects():
             #self.generate()
-        self.plot()
         while self.intersects_exists():
             self.fix_intersects()
-            self.plot()
         
 
     def generate_new_point(self, point1, point2):
@@ -230,11 +228,53 @@ class Continent():
         return self.start_node
     
     def get_point_list(self):
-        pass
+        ''' Returns the continent as a list of points, starting with start position and ending with start position'''
+        start_node = self.start_node
+        list_nodes = [start_node.get_data()]
+        working_node = start_node.get_next()
+        while working_node.get_data() is not self.start_pos:
+            list_nodes.append(working_node.get_data())
+            working_node = working_node.get_next()
+        list_nodes.append(working_node.get_data())
+        return list_nodes
+    
+    def get_extreme_points(self):
+        ''' Returns the most four most extreme points in continent max_x, max_y, min_x, min_y'''
+        max_x, max_y, min_x, min_y = float('-inf'), float('-inf'), float('inf'), float('inf') 
+        start_node = self.start_node
+        value_node = start_node.get_data()
+        if max_x < value_node[0]:
+            max_x = value_node[0]
+        elif min_x > value_node[0]:
+            min_x = value_node[0]
+        if max_y < value_node[1]:
+            max_y = value_node[1]
+        elif min_y > value_node[1]:
+            min_y = value_node[1]
+        working_node = start_node.get_next()
+        value_node = working_node.get_data()
+
+        while value_node is not self.start_pos:
+            if max_x < value_node[0]:
+                max_x = value_node[0]
+            elif min_x > value_node[0]:
+                min_x = value_node[0]
+            if max_y < value_node[1]:
+                max_y = value_node[1]
+            elif min_y > value_node[1]:
+                min_y = value_node[1]
+            working_node = working_node.get_next()
+            value_node = working_node.get_data()
+        return max_x, max_y, min_x, min_y
+
+        
+    
 def test():
     while True:
         test_cont = Continent('test', (1000,1000), 200)
         test_cont.generate()
+        print(test_cont.get_point_list())
+        print(test_cont.get_extreme_points())
         test_cont.plot()
+        
 
-test()
