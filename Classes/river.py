@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import random
 import math
 import numpy as np
-import continent as cont
+from continent import Continent, Node
 from matplotlib.path import Path
 
 class River:
@@ -23,7 +23,7 @@ class River:
             self.river_positions.append(pos)
 
     def generate_river(self):
-        """Gemerates rovers_count rivers and appends them to river_lists"""
+        """Generates rovers_count rivers and appends them to river_lists"""
         for i in range(self.rivers_count):
             temp_river = []
             river_pos = self.river_positions[i]
@@ -128,7 +128,7 @@ def plot_continent_and_rivers(continent, river_lists):
 
 
 def test():
-    test_continent = cont.Continent('test', (1000,1000), 200)
+    test_continent = Continent('test', (1000,1000), 200)
     test_continent.generate()
     continent = test_continent.get_point_list()
 
@@ -144,4 +144,4 @@ def test():
 
 
 
-test()
+
