@@ -21,6 +21,7 @@ def draw_map(map):
         roads = roads + cont.get_roads()
         villages = villages + cont.get_villages()
         draw_continent(draw, cont)
+    image.save('test_image.png')
     
 
 def draw_continent(draw, continent):
@@ -35,6 +36,21 @@ def draw_continent(draw, continent):
     print('kontinent: ' + end - start)
 
 def draw_city(draw, pos, population):
+    # Define the size and position of the dot (big circle)
+    dot_center = (250, 250)  # Center of the dot
+    dot_radius = 50  # Radius of the dot
+
+# Define the bounding box for the ellipse (circle)
+    bounding_box = [
+        (dot_center[0] - dot_radius, dot_center[1] - dot_radius),  # Top-left corner
+        (dot_center[0] + dot_radius, dot_center[1] + dot_radius)   # Bottom-right corner
+    ]
+
+    # Define the color of the dot
+    dot_color = (0, 0, 255, 255)  # Blue color, fully opaque
+
+    # Draw the filled dot (circle)
+    draw.ellipse(bounding_box, fill=dot_color)
     pass
 
 def draw_river(canvas, pos, size, size_canvas):
