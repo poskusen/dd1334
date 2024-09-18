@@ -4,87 +4,50 @@ from PIL import Image as img, ImageFont, ImageDraw
 from Classes.continent import Continent
 from Classes.continent import Node
 import time
-
-def draw():
-   
-    size = (1000,1000)
-    new_image = img.new('RGB', size, color='white')
-    canvas = new_image.load()
-    new_vector_1 = ((100,200),(200,300))
-    new_vector_2 = ((100,200),(50,300))
-    new_vector_3 = ((100,200),(200,100))
-    new_vector_4 = ((100,200),(50,100))
-
-    draw_vector(canvas, new_vector_1, (255,0,0), 8)
-    #draw_vector(canvas, new_vector_2, (255,255,0), 1)
-    #draw_vector(canvas, new_vector_3, (255,0,255), 1)
-    #draw_vector(canvas, new_vector_4, (0,255,255), 1)
-    draw_text(new_image, (500, 700), 'OsvaldBurg', 1000, 1000)
-
-    new_image.save('test_image.png')
+def draw_map(map):
+    (width, height) = map.get_mapsize()
+    image = img.new("RGBA", (width, height), color = 'white')
+    draw = ImageDraw.Draw(image)
+    continents = map.get_continents()
+    rivers = []
+    cities = []
+    mountains = []
+    roads = []
+    villages = []
+    for cont in continents:
+        rivers = rivers + cont.get_rivers()
+        cities = cities + cont.get_cities()
+        mountains = mountains + cont.get_mountains()
+        roads = roads + cont.get_roads()
+        villages = villages + cont.get_villages()
+        draw_continent(draw, cont)
     
 
-def draw_continent():
+def draw_continent(draw, continent):
+    continent_width = 4
+    colour_continent = (255,0,0)
+
+    list_points = continent.get_point_list()
     start = time.time()
-    size = (1000,1000)
-    new_image = img.new('RGB', size, color='white')
-    canvas = new_image.load()
-    new_cont = Continent('test', (1000, 1000), 100)
-    new_cont.generate()
-    start_node = new_cont.get_start_node()
-    first_node = start_node
-    second_node = first_node.get_next()
-    i = 0
-    while first_node is not start_node or i == 0:
-        draw_vector(canvas, (first_node.get_data(), second_node.get_data()), (255,0,0), 4)
-        first_node = second_node
-        second_node = second_node.get_next()
-        i += 1
-    new_image.save('test_image.png')
+    for i in range(0, len(list_points) - 1):
+        draw_vector(draw, (list_points[i], list_points[i + 1]), continent_width, colour_continent)
     end = time.time()
-    print(end - start)
+    print('kontinent: ' + end - start)
+
+def draw_city(draw, pos, population):
+    pass
+
+def draw_river(canvas, pos, size, size_canvas):
+    pass
+
+def draw_mountain(canvas, pos, size, size_canvas):
+    pass
+
+def
     
-def draw_vector(canvas, vector, colour, size): # Works
-    ''' draws a vector on the canvas '''
-    distance_x = int(vector[1][0] - vector[0][0])
-    distance_y = int(vector[1][1] - vector[0][1])
-    loop = 0
-    xloop = True
-
-    if abs(distance_x) > abs(distance_y): # Check if x or y is changed the most, to draw using that as loop variable.
-        loop = distance_x
-        x_loop = True
-    else:
-        loop = distance_y
-        x_loop = False
-
-    start_x = vector[0][0]
-    start_y = vector[0][1]
-    if x_loop: # check which direction to draw in and if we are going backwards or forwards.
-        try:
-            angle = distance_y/distance_x
-        except:
-            angle = 0
-        if distance_x > 0:
-            step = 1
-        else:
-            step = -1
-        for i in range(-step, loop, step): 
-            for j in range(1, size + 1): # add thickness
-                canvas[start_x + i, start_y + round(i*angle) + j] = colour
-    else:
-        try:
-            angle = distance_x/distance_y
-        except:
-            angle = 0
-        if distance_y > 0:
-            step = 1
-        else:
-            step = -1
-        for i in range(-step, loop, step): 
-                for j in range(1,size+1): # add thickness
-                    canvas[start_x + round(i*angle) + j, start_y + i] = colour
-
+def draw_vector(draw, vector, size = 2, colour = (255, 0, 0, 255)): # Works
+    draw.line(vector, fill = colour, width = size)
+    
 def draw_text(image, pos, text, size_canvas, object_size):
     font_size = int((10/size_canvas)*object_size)
     font = ImageFont.truetype("arial.ttf", font_size)
@@ -92,14 +55,8 @@ def draw_text(image, pos, text, size_canvas, object_size):
     text_draw.text(pos, text, font = font, fill = 'black')
 
 
-
-def draw_city(canvas, pos, size, size_canvas):
-    pass
     
-
-
-
 def main():
-    draw_continent()
+    draw_map()
 
 main()
