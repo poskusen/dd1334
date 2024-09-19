@@ -1,6 +1,11 @@
 import random
 import numpy as np
 import math
+from river import River
+from mountain import Mountain
+from village import Village
+from roads import Road
+from city import city
 
 import matplotlib.pyplot as plt
 class Node:
@@ -31,7 +36,7 @@ class Node:
     
 class Continent():
 
-    def __init__(self, name, mapsize_touple, size_continent, start_pos=None, start_vector=None, circle_vector=None):
+    def __init__(self, , mapsize_touple, size_continent, start_pos=None, start_vector=None, circle_vector=None, name = 'None'):
         self.name = name
         self.mapsize_touple = mapsize_touple
         if start_pos != None:
@@ -79,7 +84,34 @@ class Continent():
             #self.generate()
         while self.intersects_exists():
             self.fix_intersects()
+
+    def generate_content(self):
+        self.points_list = self.get_point_list(False)
+        self.rivers = River(self.points_list)
+        self.mountains = Mountain(self.points_list)
+        self.roads = Road(self.points_list)
+        self.cities = city(self.points_list)
+        self.villages = Village(self.point_list)
+
+
         
+    def get_rivers(self):
+        return self.rivers
+
+    def get_mountains(self):
+        return self.mountains
+
+    def get_roads(self):
+        return self.roads
+
+    def get_villages(self):
+        return self.villages
+
+    def get_cities(self):
+        return self.cities
+
+    def get_size(self):
+        pass # implementera PLZ OLLE
 
     def generate_new_point(self, point1, point2):
         length = random.uniform(0, 1) * self.vector_size
@@ -227,16 +259,19 @@ class Continent():
     def get_start_node(self):
         return self.start_node
     
-    def get_point_list(self):
+    def get_point_list(self, done = True):
         ''' Returns the continent as a list of points, starting with start position and ending with start position'''
-        start_node = self.start_node
-        list_nodes = [start_node.get_data()]
-        working_node = start_node.get_next()
-        while working_node.get_data() is not self.start_pos:
+        if not done:
+            start_node = self.start_node
+            list_nodes = [start_node.get_data()]
+            working_node = start_node.get_next()
+            while working_node.get_data() is not self.start_pos:
+                list_nodes.append(working_node.get_data())
+                working_node = working_node.get_next()
             list_nodes.append(working_node.get_data())
-            working_node = working_node.get_next()
-        list_nodes.append(working_node.get_data())
-        return list_nodes
+            return list_nodes
+        else:
+            return self.points_list
     
     def get_extreme_points(self):
         ''' Returns the most four most extreme points in continent max_x, max_y, min_x, min_y'''
@@ -266,6 +301,10 @@ class Continent():
             working_node = working_node.get_next()
             value_node = working_node.get_data()
         return max_x, max_y, min_x, min_y
+
+    def move_continent(self, delta_x, delta_y):
+        for i in range(0, len(self.points_list)):
+            self.points_list[i][0], self.points_list[i][1] = self.points_list[i][0] + delta_x, self.points_list[i][1] + delta_y
 
     
 def test():

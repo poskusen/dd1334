@@ -8,9 +8,11 @@ import time
 color_text = (255, 255, 255, 0)
 
 def draw_map(map):
+    start = time.time()
     (width, height) = map.get_mapsize()
     image = img.new("RGBA", (width, height), color = 'white')
     draw = ImageDraw.Draw(image)
+    size_map = map.get_mapsize()
 
     continents = map.get_continents()
     rivers = []
@@ -35,7 +37,7 @@ def draw_map(map):
         city_size = city[1]
         city_pos = city[0]
         city_name = city[2]
-        draw_city(draw, city_pos, city_size, city_name, image)
+        draw_city(draw, city_pos, city_size, name = city_name, image = image)
 
     for village in villages:
         village_pos = village[0]
@@ -52,11 +54,13 @@ def draw_map(map):
         mountain_pos = mountain[0]
         mountain_size = mountain[1]
         mountain_name = mountain[2]
-        draw_mountain(draw, mountain_pos, mountain_size, mountain_name, image)
+        draw_mountain(draw, mountain_pos, mountain_size, name = mountain_name, image = image)
 
-
-
+    draw_oceans(size_map, image, draw, continents)
+    image.show()
     image.save('test_image.png')
+    end = time.time()
+    print('Göra karta tid: ' + end - start)
     
 
 def draw_continent(draw, continent):
@@ -64,11 +68,10 @@ def draw_continent(draw, continent):
     colour_continent = (255,0,0)
 
     list_points = continent.get_point_list()
-    start = time.time()
+    
     for i in range(0, len(list_points) - 1):
         draw_vector(draw, (list_points[i], list_points[i + 1]), continent_width, colour_continent)
-    end = time.time()
-    print('kontinent: ' + end - start)
+    
 
 def draw_city(draw, pos, population, name = None, image = None):
     city_color = (0, 0, 255, 255)
@@ -128,6 +131,26 @@ def draw_text(image, pos, text, size_canvas, object_size):
     font = ImageFont.truetype("arial.ttf", font_size)
     text_draw = ImageDraw.Draw(image)
     text_draw.text(pos, text, font = font, fill = 'black')
+
+def draw_oceans(map_size, image, draw, continents):
+
+    mask = img.new("L", (map_size[0],map_size[1]), 0)
+
+    draw_mask = ImageDraw.Draw(mask)
+
+    areas = []
+    for cont in continents:
+        areas.append(cont.get_list_point())
+
+    for area in areas:
+       draw_mask.polygon(area, fill=255)
+
+    inverted_mask = img.eval(mask, lambda x: 255 - x)
+
+    
+    draw.bitmap((0, 0), inverted_mask, fill="blue")
+
+    image.paste("white", (0, 0), mask=mask)
 
 
     
