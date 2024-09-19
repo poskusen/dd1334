@@ -27,9 +27,9 @@ class Map:
     
     def generate_continents(self, amount_continents):
         for i in range(amount_continents):
-
-    def generate_rivers(self):
+            pass
+    
+    def generate_oceans():
         pass
     
-    def get_river()
 

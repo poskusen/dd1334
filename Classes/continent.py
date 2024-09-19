@@ -267,7 +267,6 @@ class Continent():
             value_node = working_node.get_data()
         return max_x, max_y, min_x, min_y
 
-        
     
 def test():
     while True:
