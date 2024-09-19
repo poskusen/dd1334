@@ -2,7 +2,6 @@ import matplotlib.pyplot as plt
 import random
 import math
 import numpy as np
-from continent import Continent, Node
 from matplotlib.path import Path
 
 class River:
@@ -105,42 +104,6 @@ class River:
         path = Path(self.continent)
         return path.contains_point(point)
 
-
-def plot_continent_and_rivers(continent, river_lists):
-    plt.figure(figsize=(10, 10))
-
-    # Plot the continent
-    continent_x, continent_y = zip(*continent)
-    plt.plot(continent_x, continent_y, color='green', label='Continent', linewidth=2)
-
-    # Plot the rivers with thicker lines
-    for river in river_lists:
-        river_x, river_y = zip(*river)
-        plt.plot(river_x, river_y, color='blue', linewidth=2, linestyle='-', label='River')
-
-    plt.title('Continent and Rivers')
-    plt.xlabel('X Coordinate')
-    plt.ylabel('Y Coordinate')
-    plt.axis('equal')
-    plt.grid()
-    plt.legend()
-    plt.show()
-
-
-def test():
-    test_continent = Continent('test', (1000,1000), 200)
-    test_continent.generate()
-    continent = test_continent.get_point_list()
-
-    test_river = River(continent)
-    print(test_river.count_vectors())
-    print(test_river.river_positions)
-
-    test_river.generate_river()
-    print(test_river.river_lists)
-
-    # Plot the continent and rivers
-    plot_continent_and_rivers(continent, test_river.river_lists)
 
 
 
