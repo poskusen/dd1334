@@ -21,6 +21,8 @@ class River:
             pos = random.randint(0, (self.count_vectors()) - 1)
             self.river_positions.append(pos)
 
+        self.generate_river()
+
     def generate_river(self):
         """Generates rovers_count rivers and appends them to river_lists"""
         for i in range(self.rivers_count):

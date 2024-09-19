@@ -21,6 +21,8 @@ class Mountain():
         if self.mountains_count is None:
             self.mountains_count = int(len(self.continent)*0.4*self.mountain_scale/100)
 
+        self.generate_mountain_range()
+
     def generate_mountain_range(self):
         """Generates a number of mountain ranges"""
         for i in range(self.mountains_count):
