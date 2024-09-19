@@ -3,6 +3,7 @@ import math
 from PIL import Image as img, ImageFont, ImageDraw
 from Classes.continent import Continent
 from Classes.continent import Node
+from Classes.map import map
 import time
 
 color_text = (255, 255, 255, 0)
@@ -60,7 +61,7 @@ def draw_map(map):
     image.show()
     image.save('test_image.png')
     end = time.time()
-    print('Göra karta tid: ' + end - start)
+    print('Gora karta tid: ' + end - start)
     
 
 def draw_continent(draw, continent):
@@ -155,6 +156,7 @@ def draw_oceans(map_size, image, draw, continents):
 
     
 def main():
-    draw_map()
+    karta = map(2, 100, 10, 3, 3, 3, 3, mapsize = (1000, 1000))
+    draw_map(karta)
 
 main()

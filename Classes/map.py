@@ -33,9 +33,8 @@ class Map:
             continent.generate_content()
             self.continent_list.append(continent)
             
-    
-    def generate_oceans(self):
-        pass # please implement OLLE
+    def get_continents(self):
+        return self.continent_list
 
 
     

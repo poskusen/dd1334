@@ -1,6 +1,6 @@
 
 
-class roads():
+class road():
 
     def __init__(self, continent, village_locations):
 

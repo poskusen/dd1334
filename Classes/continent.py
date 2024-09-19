@@ -4,7 +4,7 @@ import math
 from river import River
 from mountain import Mountain
 from village import Village
-from roads import Road
+from roads import road
 from city import city
 
 import matplotlib.pyplot as plt
@@ -36,7 +36,7 @@ class Node:
     
 class Continent():
 
-    def __init__(self, , mapsize_touple, size_continent, start_pos=None, start_vector=None, circle_vector=None, name = 'None'):
+    def __init__(self, mapsize_touple, size_continent, start_pos=None, start_vector=None, circle_vector=None, name = 'None'):
         self.name = name
         self.mapsize_touple = mapsize_touple
         if start_pos != None:
@@ -92,8 +92,6 @@ class Continent():
         self.roads = Road(self.points_list)
         self.cities = city(self.points_list)
         self.villages = Village(self.point_list)
-
-
         
     def get_rivers(self):
         return self.rivers
@@ -186,6 +184,7 @@ class Continent():
                 node_2 = node_1.get_next()
             working_node = working_node.get_next()
             working_node_next = working_node.get_next()
+
     def intersects_exists(self): # Loppar igenom alla nodsen och kolla om x och y koordinaterna intersectar
         working_node = self.start_node.get_next()
         working_node_next = working_node.get_next()
@@ -202,8 +201,6 @@ class Continent():
             working_node_next = working_node.get_next()
         return False    
             
-
-
     def crosses(self, vector1, vector2):
         (x1, y1) = vector1[0].get_data()
         (x2, y2) = vector1[1].get_data()
@@ -309,7 +306,7 @@ class Continent():
     
 def test():
     while True:
-        test_cont = Continent('test', (1000,1000), 200)
+        test_cont = Continent('test', (1000, 1000), 200)
         test_cont.generate()
         print(test_cont.get_point_list())
         print(test_cont.get_extreme_points())
