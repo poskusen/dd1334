@@ -4,7 +4,7 @@ import math
 from matplotlib.path import Path
 
 
-class Mountain():
+class Mountain_chain():
 
     def __init__(self, continent, mountain_scale = 100):
 
@@ -51,7 +51,13 @@ class Mountain():
 
     def is_point_inside_continent(self, point):
         """Checks if a point is inside the continent defined by its vertices."""
-        from matplotlib.path import Path
-
         path = Path(self.continent)
         return path.contains_point(point)
+
+class Mountain():
+    def __init__(self, continent):
+        pass
+
+
+
+

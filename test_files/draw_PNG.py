@@ -1,8 +1,8 @@
 #from Classes.map import map
 import math
 from PIL import Image as img, ImageFont, ImageDraw
-from Classes.continent import Continent
-from Classes.continent import Node
+from test_files.continent_gammal import Continent
+from test_files.continent_gammal import Node
 import time
 
 def draw():
