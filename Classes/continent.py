@@ -1,12 +1,12 @@
 import random
 import numpy as np
 import math
-from river import River
-from mountain import Mountain_chain
-from mountain import Mountain
-from village import Village
+from Classes.river import River
+from Classes.mountain import Mountain_chain
+from Classes.mountain import Mountain
+from Classes.village import Village
 #from roads import Road
-from city import city
+from Classes.city import city
 
 import matplotlib.pyplot as plt
 
@@ -92,8 +92,7 @@ class Continent():
         while self.intersects_exists():
             self.fix_intersects()
 
-        self.extreme_point = self.get_extreme_points()
-        print(self.get_size())
+        self.get_extreme_points()
 
     def generate_content(self):
         self.points_list = self.get_point_list(False)  # Populate points_list
@@ -120,7 +119,6 @@ class Continent():
 
     def get_size(self):
         size = abs((self.extreme_point[0] - self.extreme_point[2]) * (self.extreme_point[1] - self.extreme_point[3]))
-        print(size)
         return size
 
 
@@ -329,7 +327,7 @@ class Continent():
                     min_y = value_node[1]
                 working_node = working_node.get_next()
                 value_node = working_node.get_data()
-            return max_x, max_y, min_x, min_y
+            self.extreme_point = [max_x, max_y, min_x, min_y]
         else:
             return self.extreme_point
 
@@ -347,7 +345,7 @@ def test():
     test_cont.plot()  # Plot continent, rivers, villages, and mountains
     
 
-test()
+#test()
 
 
 

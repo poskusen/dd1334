@@ -1,15 +1,15 @@
 #from Classes.map import map
 import math
 from PIL import Image as img, ImageFont, ImageDraw
-from test_files.continent_gammal import Continent
-from test_files.continent_gammal import Node
-from Classes.map import map
+from Classes.continent import Continent
+from Classes.continent import Node
+from Classes.map import Map
 import time
 
 color_text = (255, 255, 255, 0)
 
 def draw_map(map):
-    start = time.time()
+
     (width, height) = map.get_mapsize()
     image = img.new("RGBA", (width, height), color = 'white')
     draw = ImageDraw.Draw(image)
@@ -25,7 +25,7 @@ def draw_map(map):
     for cont in continents:
         rivers = rivers + cont.get_rivers().get_river_list()
         mountain_chains = mountain_chains + cont.get_mountain_chains()
-        mountains = mountains + cont.get_mountains()
+        mountains = mountains + cont.get_mountains().get_mountain_list()
         villages = villages + cont.get_villages().get_cities_list()
         draw_continent(draw, cont)
 
@@ -55,11 +55,10 @@ def draw_map(map):
         mountain_name = mountain[2]
         draw_mountain(draw, mountain_pos, mountain_size, name = mountain_name, image = image)
 
-    draw_oceans(size_map, image, draw, continents)
+    #draw_oceans(size_map, image, draw, continents)
     image.show()
     image.save('test_image.png')
-    end = time.time()
-    print('Gora karta tid: ' + end - start)
+
     
 
 def draw_continent(draw, continent):
@@ -154,7 +153,9 @@ def draw_oceans(map_size, image, draw, continents):
 
     
 def main():
-    karta = map(2, 100, 10, 3, 3, 3, 3, mapsize = (1000, 1000))
+    karta = Map(2, 100, 10, 3, 3, 3, 3, mapsize = (1000, 1000))
+    
+
     draw_map(karta)
 
 main()
