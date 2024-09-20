@@ -263,9 +263,12 @@ class Continent():
             plt.scatter(village[0], village[1], color='red', marker='o', zorder=4)
 
         # Plot the mountains
-        for mountain_range in self.mountains.mountains_list:
+        for mountain_range in self.mountain_chains.mountains_list:
             mountain_x, mountain_y = zip(*mountain_range)  # Unzip mountain points
             plt.scatter(mountain_x, mountain_y, color='green', marker='^', zorder=3)
+
+        for mountain in self.mountains.big_mountains:
+            plt.scatter(mountain[0], mountain[1], color='grey', marker='^', zorder=5,s=400 )
 
         plt.xlim(min(x) - 100, max(x) + 100)
         plt.ylim(min(y) - 100, max(y) + 100)
