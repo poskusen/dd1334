@@ -55,9 +55,34 @@ class Mountain_chain():
         return path.contains_point(point)
 
 class Mountain():
-    def __init__(self, continent):
-        pass
+    def __init__(self, continent, mountain_scale = 100):
+        self.continent = continent
+        self.mountain_scale = mountain_scale
+
+        self.big_mountains = []
+
+        self.mountains_count = int(len(self.continent) * 0.2 * self.mountain_scale/100)
+
+        self.generate_big_mountains()
+
+    def generate_big_mountains(self):
+        for i in range(self.mountains_count):
+            while True:
+                # Generate random coordinates
+                x = random.uniform(min(x for x, _ in self.continent), max(x for x, _ in self.continent))
+                y = random.uniform(min(y for _, y in self.continent), max(y for _, y in self.continent))
+                mountain_cords = (x, y)
+
+                # Check if the random coordinates are inside the continent
+                if self.is_point_inside_continent(mountain_cords):
+                    self.big_mountains.append(mountain_cords)
+
+                    break
 
 
 
+    def is_point_inside_continent(self, point):
+        """Checks if a point is inside the continent defined by its vertices."""
+        path = Path(self.continent)
+        return path.contains_point(point)
 
