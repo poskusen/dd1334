@@ -6,7 +6,7 @@ from matplotlib.path import Path
 
 class Mountain_chain():
 
-    def __init__(self, continent, mountain_scale = 100):
+    def __init__(self, continent, mountain_scale):
 
         self.continent = continent
         self.mountain_scale = mountain_scale
@@ -37,7 +37,7 @@ class Mountain_chain():
                     mountains = []
 
                     for i in range(50):
-                        x_point = random.gauss(mountain_cords[0], 8)
+                        x_point = random.gauss(mountain_cords[0], 10)
                         y_point = random.gauss(mountain_cords[1], 5)
 
                         mountain = (x_point, y_point)
@@ -58,7 +58,7 @@ class Mountain_chain():
         return self.mountains_list
 
 class Mountain():
-    def __init__(self, continent, mountain_scale = 100):
+    def __init__(self, continent, mountain_scale):
         self.continent = continent
         self.mountain_scale = mountain_scale
 

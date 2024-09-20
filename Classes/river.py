@@ -5,7 +5,7 @@ import numpy as np
 from matplotlib.path import Path
 
 class River:
-    def __init__(self, continent, river_scale=100, size_continent=100):
+    def __init__(self, continent, river_scale, size_continent=100):
         self.continent = continent
         self.river_scale = river_scale
         self.rivers_count = None

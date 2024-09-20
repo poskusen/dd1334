@@ -5,7 +5,7 @@ from matplotlib.path import Path
 
 
 class Village:
-    def __init__(self, continent, river_lists, village_scale=100):
+    def __init__(self, continent, river_lists, village_scale):
         self.continent = continent
         self.river_lists = river_lists
         self.village_scale = village_scale  # Number from 1-100

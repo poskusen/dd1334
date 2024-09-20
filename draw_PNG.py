@@ -5,15 +5,17 @@ from Classes.continent import Continent
 from Classes.continent import Node
 from Classes.map import Map
 import time
+from random import randint
 
 color_text = (255, 255, 255, 0)
 
 def draw_map(map):
-
     (width, height) = map.get_mapsize()
-    image = img.new("RGBA", (width, height), color = 'white')
+    image = img.new("RGBA", (width, height), color='white')
     draw = ImageDraw.Draw(image)
-    size_map = map.get_mapsize()
+
+    # Draw the blue ocean background first
+    draw_oceans(draw, (width, height))
 
     continents = map.get_continents()
     rivers = []
@@ -22,107 +24,211 @@ def draw_map(map):
     mountains = []
     roads = []
     villages = []
-    for cont in continents:
-        rivers = rivers + cont.get_rivers().get_river_list()
-        mountain_chains = mountain_chains + cont.get_mountain_chains().get_mountain_chains()
-        mountains = mountains + cont.get_mountains().get_mountain_list()
-        villages = villages + cont.get_villages().get_cities_list()
-        draw_continent(draw, cont)
 
-    #draw_oceans(size_map, image, draw, continents)
+    for cont in continents:
+        rivers.extend(cont.get_rivers().get_river_list())
+        mountain_chains.extend(cont.get_mountain_chains().get_mountain_chains())
+        mountains.extend(cont.get_mountains().get_mountain_list())
+        villages.extend(cont.get_villages().get_cities_list())
+        draw_continent(draw, cont)  # Draw continents after oceans
 
     for river in rivers:
         draw_river(draw, river)
 
-    for city in cities:
-        #city_size = city[1]
-        city_pos = city
-        #city_name = city[2]
-        draw_city(draw, city_pos, 5, image = image)
-
     for village in villages:
-        village_pos = village[0]
+        village_pos = village
         village_size = village[1]
         draw_city(draw, village_pos, village_size)
-
-    for road in roads:
-        draw_road(draw, road)
 
     for mountain_chain in mountain_chains:
         draw_mountain_chain(draw, mountain_chain)
 
-    for mountain in mountains: # Namn på mountains
+    for mountain in mountains:
         mountain_pos = mountain
-        #mountain_size = mountain[1]
-        #mountain_name = mountain[2]
-        draw_mountain(draw, mountain_pos, 10, image = image)
+        draw_mountain(draw, mountain_pos, 10, image=image)
 
-    
     image.show()
     image.save('test_image.png')
 
-    
+
+
+def fill_continent(draw, continent, color=(0, 128, 0, 255)):
+    list_points = continent.get_point_list()
+    draw.polygon(list_points, fill=color)
 
 def draw_continent(draw, continent):
-    continent_width = 4
-    colour_continent = (255,0,0)
+    continent_width = 5
+    colour_continent = (0, 100, 0)  # Outline color
+
+    # Fill the continent
+    fill_continent(draw, continent, color=(0, 180, 0))  # Fill with green
 
     list_points = continent.get_point_list()
-    
+
     for i in range(0, len(list_points) - 1):
         draw_vector(draw, (list_points[i], list_points[i + 1]), continent_width, colour_continent)
-    
 
-def draw_city(draw, pos, population, name = None, image = None):
-    city_color = (0, 0, 255, 255)
-    pos = (250, 250)  # Center of the dot
-    size = population/100  # Radius of the dot
 
-# Define the bounding box for the ellipse (circle)
-    bounding_box = [
-        (pos[0] - size, pos[1] - size), 
-        (pos[0] + size, pos[1] + size)   
+
+
+    list_points = continent.get_point_list()
+
+    for i in range(0, len(list_points) - 1):
+        draw_vector(draw, (list_points[i], list_points[i + 1]), continent_width, colour_continent)
+
+
+def draw_city(draw, pos, population, name=None, image=None):
+    # Define colors
+    hut_color = (139, 69, 19, 255)  # Brown color for the hut base
+    roof_color = (255, 215, 0, 255)  # Yellow color for the roof (hayish)
+    size = 10  # Base size for the hut, adjust as needed
+
+    # Draw the square base of the hut
+    hut_box = [
+        (pos[0] - size // 2, pos[1] - size // 2),  # Bottom left
+        (pos[0] + size // 2, pos[1] + size // 2)   # Top right
     ]
-    
-    draw.ellipse(bounding_box, fill=city_color)
+    draw.rectangle(hut_box, fill=hut_color)  # Draw the hut base
 
+    # Draw the triangular roof on top
+    roof = [
+        (pos[0] - size // 2, pos[1] - size // 2),  # Bottom left (same as hut base)
+        (pos[0], pos[1] - size),                     # Peak of the roof
+        (pos[0] + size // 2, pos[1] - size // 2)   # Bottom right (same as hut base)
+    ]
+    draw.polygon(roof, fill=roof_color)  # Draw the roof
+
+    # Draw the city name, if provided
     if name is not None:
-        draw_text(image, pos, name, 1000, size)
+        draw_text(image, pos, name, 1000, size)  # Optional: Draw the name
+
+
+import random
+
+import random
 
 def draw_river(draw, river):
-    color_river = (0, 0, 255, 255)
-    size_river = 3
-    for vector in river:
-        draw_vector(draw, vector, size_river, color_river)
+    # Define colors
+    color_start = (0, 100, 255, 255)  # Start with a darker blue
+    color_end = (173, 216, 230, 255)  # Light blue for the shallow areas
+    base_size = 4  # Base width of the river
 
-def draw_road(draw, road):
-    color_road = (0, 0, 255, 255)
-    size_road = 3
-    for vector in road:
-        draw_vector(draw, vector, size_road, color_road)
+    for i in range(len(river) - 1):
+        # Create a line segment from river[i] to river[i + 1]
+        start_point = river[i]
+        end_point = river[i + 1]
 
-def draw_mountain_chain(draw, vector): #Olika storlekar p� berg l�ngs med vektorn
-    pass
+        # Calculate the control point for a gentle curve (less offset)
+        control_x = (start_point[0] + end_point[0]) / 2  # Remove random offset
+        control_y = (start_point[1] + end_point[1]) / 2 + random.randint(-5, 5)  # Slight Y-offset for some curvature
 
-def draw_mountain(draw, pos, size, name = None, image = None): #implementera snyggar berg
-    mountain_color = (0, 0, 255, 255)
-   
-   # Radius of the dot
+        # Draw the curved river using small line segments
+        segments = 10  # Number of segments to approximate the curve
+        previous_point = start_point  # Start with the first point
 
-    # Define the bounding box for the ellipse (circle)
-    bounding_box = [
-        (pos[0] - size, pos[1] - size), 
-        (pos[0] + size, pos[1] + size)   
+        for j in range(segments + 1):  # Include the last point
+            # Interpolate between start_point and end_point
+            t = j / segments
+            curve_point = (
+                (1 - t) * (1 - t) * start_point[0] + 2 * (1 - t) * t * control_x + t * t * end_point[0],
+                (1 - t) * (1 - t) * start_point[1] + 2 * (1 - t) * t * control_y + t * t * end_point[1]
+            )
+
+            # Draw the line segment
+            if j > 0:
+                draw.line([previous_point, curve_point], fill=color_start, width=base_size)
+            previous_point = curve_point
+
+    # Optional: Add some reflection or shimmer effect
+    for i in range(len(river) - 1):
+        start_point = river[i]
+        end_point = river[i + 1]
+        shimmer_size = random.randint(1, 3)  # Random shimmer size
+        draw.line([start_point[0], start_point[1] - shimmer_size, end_point[0], end_point[1] - shimmer_size],
+                  fill=color_end, width=1)  # Light blue shimmer line
+
+
+
+# draw_road(draw, road):
+    #color_road = (0, 0, 255, 255)
+    #size_road = 3
+    #for vector in road:
+        #draw_vector(draw, vector, size_road, color_road)
+
+def draw_mountain_chain(draw, mountain_locations, size=3, color=(128, 128, 128, 255)):
+    # Define colors
+    mountain_color = color
+    peak_color = (255, 255, 255, 255)  # White for the peak
+    outline_color = (105, 105, 105, 255)  # Darker gray for the outline
+
+    for location in mountain_locations:
+        x, y = location
+
+        # Calculate the points of the triangle (mountain)
+        triangle = [
+            (x, y - size),          # Top vertex
+            (x - size, y + size),   # Bottom left vertex
+            (x + size, y + size)    # Bottom right vertex
+        ]
+
+        # Draw the outline (darker gray) slightly offset downward
+        outline_triangle = [
+            (x, y - size + 2),      # Top vertex offset down
+            (x - size, y + size + 2),  # Bottom left vertex offset down
+            (x + size, y + size + 2)    # Bottom right vertex offset down
+        ]
+        draw.polygon(outline_triangle, fill=outline_color)
+
+        # Draw the main mountain triangle
+        draw.polygon(triangle, fill=mountain_color)
+
+        # Draw the peak (white) with smaller size
+        peak_size = size * 0.5  # Adjust the peak size (50% of the original)
+        peak_triangle = [
+            (x, y - peak_size),            # Adjusted top vertex
+            (x - peak_size, y + size - peak_size),  # Adjusted bottom left vertex
+            (x + peak_size, y + size - peak_size)   # Adjusted bottom right vertex
+        ]
+        draw.polygon(peak_triangle, fill=peak_color)
+
+
+
+
+def draw_mountain(draw, pos, size, name=None, image=None):
+    mountain_color = (128, 128, 128, 255)
+    peak_color = (255, 255, 255, 255)  # White for the peak
+    outline_color = (105, 105, 105, 255)  # Darker gray for the outline
+
+    # Define the three vertices of the triangle (mountain)
+    triangle = [
+        (pos[0], pos[1] - size),          # Top vertex (peak)
+        (pos[0] - size, pos[1] + size),   # Bottom left vertex
+        (pos[0] + size, pos[1] + size)    # Bottom right vertex
     ]
-    
-    draw.ellipse(bounding_box, fill = mountain_color)
+
+    # Draw the outline (darker gray) slightly offset downward
+    outline_triangle = [
+        (pos[0], pos[1] - size + 2),          # Top vertex offset down
+        (pos[0] - size, pos[1] + size + 2),   # Bottom left vertex offset down
+        (pos[0] + size, pos[1] + size + 2)    # Bottom right vertex offset down
+    ]
+    draw.polygon(outline_triangle, fill=outline_color)
+
+    # Draw the main mountain triangle
+    draw.polygon(triangle, fill=mountain_color)
+
+    # Draw the peak (white) at the very top, making it smaller
+    peak_size = size * 0.2  # Adjust the peak size (30% of the original)
+    peak_triangle = [
+        (pos[0], pos[1] - size),              # Keep peak at the top
+        (pos[0] - peak_size, pos[1] - size + peak_size),  # Adjusted bottom left vertex
+        (pos[0] + peak_size, pos[1] - size + peak_size)   # Adjusted bottom right vertex
+    ]
+    draw.polygon(peak_triangle, fill=peak_color)
 
     if name is not None:
-        draw_text(image, pos, name, 1000, size) # Fixa size och canvas_size
-    
+        draw_text(image, pos, name, 1000, size)  # Optional: Draw the name
 
-
-    
 def draw_vector(draw, vector, size = 2, colour = (255, 0, 0, 255)): # Works
     draw.line(vector, fill = colour, width = size)
     
@@ -132,31 +238,19 @@ def draw_text(image, pos, text, size_canvas, object_size):
     text_draw = ImageDraw.Draw(image)
     text_draw.text(pos, text, font = font, fill = 'black')
 
-def draw_oceans(map_size, image, draw, continents):
 
-    mask = img.new("L", (map_size[0],map_size[1]), 0)
-
-    draw_mask = ImageDraw.Draw(mask)
-
-    areas = []
-    for cont in continents:
-        areas.append(cont.get_point_list())
-
-    for area in areas:
-       draw_mask.polygon(area, fill=255)
-
-    inverted_mask = img.eval(mask, lambda x: 255 - x)
-
-    draw.bitmap((0, 0), inverted_mask, fill="blue")
-
-    image.paste("white", (0, 0), mask=mask)
+def draw_oceans(draw, map_size):
+    # Draw a gradient ocean background
+    for y in range(map_size[1]):
+        # Create a gradient effect from a darker blue at the top to a lighter blue at the bottom
+        blue_intensity = int(30 + (y / map_size[1]) * (144 - 30))
+        ocean_color = (0, blue_intensity, 255, 255)
+        draw.line([(0, y), (map_size[0], y)], fill=ocean_color)
 
 
-    
+
 def main():
-    karta = Map(4, 100, 10, 3, 3, 3, 3, mapsize = (1000, 1000))
-
-
+    karta = Map(6, 50, 50, 50, 50, 50, 50, village_scale=40, mapsize = (1000, 1000))
     draw_map(karta)
 
 main()

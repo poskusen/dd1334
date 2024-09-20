@@ -42,7 +42,7 @@ class Node:
 
 
 class Continent():
-    def __init__(self, mapsize_touple, size_continent, start_pos=None, start_vector=None, circle_vector=None,
+    def __init__(self, mapsize_touple, size_continent, riverscale, mountainscale, villagescale, start_pos=None, start_vector=None, circle_vector=None,
                  name='None'):
         self.extreme_point = None
         self.name = name
@@ -61,6 +61,10 @@ class Continent():
         self.vector_size = 500 * size_continent / mapsize_touple[0]
 
         self.points_list = []  # Initialize points_list here
+
+        self.riverscale = riverscale
+        self.mountainscale = mountainscale
+        self.villagescale = villagescale
 
     def generate(self):
         point = self.start_pos
@@ -99,10 +103,10 @@ class Continent():
 
     def generate_content(self):
           # Populate points_list
-        self.rivers = River(self.points_list)
-        self.villages = Village(self.points_list, self.rivers.river_lists)
-        self.mountain_chains = Mountain_chain(self.points_list)
-        self.mountains = Mountain(self.points_list)
+        self.rivers = River(self.points_list, river_scale=self.riverscale)
+        self.villages = Village(self.points_list, self.rivers.river_lists,village_scale=self.villagescale)
+        self.mountain_chains = Mountain_chain(self.points_list, mountain_scale=self.mountainscale)
+        self.mountains = Mountain(self.points_list, mountain_scale=self.mountainscale)
 
 
     def get_rivers(self):
