@@ -30,12 +30,29 @@ class Map:
             continent = Continent(self.mapsize, size_continent)
             while continent.get_size() > error_range*2 + error_range or continent.get_size() < error_range*2 - error_range:
                 continent = Continent(self.mapsize, size_continent)
-            
+            could_place = False
+            while not could_place:
+                could_place, move_x, move_y = self.place(continent)
+            continent.move_continent(move_x, move_y)
             continent.generate_content()
             self.continent_list.append(continent)
             
     def get_continents(self):
         return self.continent_list
+    
+    def place(self, continent):
+        edges = continent.get_extreme_points()
+        move_x, move_y = random.uniform(-1,1)*500, random.uniform(-1,1)*500
+        edges[0], edges[1], edges[2], edges[3] = edges[0] + move_x, edges[1] + move_y, edges[2] + move_x, edges[3] + move_y
+        for cont in self.continent_list:
+            check_edges = cont.get_extreme_points()
+            if check_edges[0] > edges[0] > check_edges[2] or check_edges[0] > edges[2] > check_edges[2]:
+                return False, None, None
+            elif check_edges[1] > edges[1] > check_edges[3] or check_edges[1] > edges[3] > check_edges[3]:
+                return False, None, None
+
+        return True, move_x, move_y
+
 
 
     
