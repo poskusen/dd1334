@@ -105,7 +105,9 @@ class River:
         # Create a path from the continent points
         path = Path(self.continent)
         return path.contains_point(point)
-
+    
+    def get_river_list(self):
+        return self.river_lists
 
 
 

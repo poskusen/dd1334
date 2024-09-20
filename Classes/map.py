@@ -22,14 +22,15 @@ class Map:
     
     def generate_continents(self, amount_continents, continent_scale):
         self.continent_list = []
-        error_range = 300
+        error_range = continent_scale*continent_scale
         size_variance = 100
 
         for i in range(amount_continents):
             size_continent = random.randint(continent_scale - size_variance, continent_scale + size_variance)
             continent = Continent(self.mapsize, size_continent)
-            while continent.get_size() > continent_scale + error_range or continent.get_size() < continent_scale - error_range:
+            while continent.get_size() > error_range*2 + error_range or continent.get_size() < error_range*2 - error_range:
                 continent = Continent(self.mapsize, size_continent)
+            
             continent.generate_content()
             self.continent_list.append(continent)
             

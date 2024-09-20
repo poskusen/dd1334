@@ -3,6 +3,7 @@ import numpy as np
 import math
 from river import River
 from mountain import Mountain_chain
+from mountain import Mountain
 from village import Village
 #from roads import Road
 from city import city
@@ -90,11 +91,15 @@ class Continent():
         while self.intersects_exists():
             self.fix_intersects()
 
+        self.extreme_point = self.get_extreme_points()
+        print(self.get_size())
+
     def generate_content(self):
         self.points_list = self.get_point_list(False)  # Populate points_list
         self.rivers = River(self.points_list)
         self.villages = Village(self.points_list, self.rivers.river_lists)
-        self.mountains = Mountain_chain(self.points_list)
+        self.mountain_chains = Mountain_chain(self.points_list)
+        self.mountains = Mountain(self.points_list)
 
 
     def get_rivers(self):
@@ -113,7 +118,10 @@ class Continent():
         return self.cities
 
     def get_size(self):
-        pass  # implementera PLZ OLLE
+        size = abs((self.extreme_point[0] - self.extreme_point[2]) * (self.extreme_point[1] - self.extreme_point[3]))
+        print(size)
+        return size
+
 
     def generate_new_point(self, point1, point2):
         length = random.uniform(0, 1) * self.vector_size
@@ -252,12 +260,12 @@ class Continent():
 
         # Plot the villages
         for village in self.villages.village_locations:
-            plt.scatter(village[0], village[1], color='red', marker='o', label='Village', zorder=4)
+            plt.scatter(village[0], village[1], color='red', marker='o', zorder=4)
 
         # Plot the mountains
         for mountain_range in self.mountains.mountains_list:
             mountain_x, mountain_y = zip(*mountain_range)  # Unzip mountain points
-            plt.scatter(mountain_x, mountain_y, color='green', marker='^', label='Mountain', zorder=3)
+            plt.scatter(mountain_x, mountain_y, color='green', marker='^', zorder=3)
 
         plt.xlim(min(x) - 100, max(x) + 100)
         plt.ylim(min(y) - 100, max(y) + 100)
@@ -324,12 +332,12 @@ class Continent():
 
 
 def test():
-    test_cont = Continent((15000, 15000), 1200)
+    test_cont = Continent((1500, 1500), 120)
     test_cont.generate()
     test_cont.generate_content()  # Generate villages, rivers, and mountains
 
     test_cont.plot()  # Plot continent, rivers, villages, and mountains
-    print(test_cont.get_point_list())
+    
 
 test()
 

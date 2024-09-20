@@ -91,3 +91,6 @@ class Village:
         """Checks if a point is inside the continent defined by its vertices."""
         path = Path(self.continent)
         return path.contains_point(point)
+    
+    def get_cities_list(self):
+        return self.village_locations

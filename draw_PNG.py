@@ -1,8 +1,8 @@
 #from Classes.map import map
 import math
 from PIL import Image as img, ImageFont, ImageDraw
-from Classes.continent import Continent
-from Classes.continent import Node
+from test_files.continent_gammal import Continent
+from test_files.continent_gammal import Node
 from Classes.map import map
 import time
 
@@ -23,12 +23,10 @@ def draw_map(map):
     roads = []
     villages = []
     for cont in continents:
-        rivers = rivers + cont.get_rivers()
-        cities = cities + cont.get_cities()
+        rivers = rivers + cont.get_rivers().get_river_list()
         mountain_chains = mountain_chains + cont.get_mountain_chains()
         mountains = mountains + cont.get_mountains()
-        roads = roads + cont.get_roads()
-        villages = villages + cont.get_villages()
+        villages = villages + cont.get_villages().get_cities_list()
         draw_continent(draw, cont)
 
     for river in rivers:
@@ -102,7 +100,7 @@ def draw_road(draw, road):
     for vector in road:
         draw_vector(draw, vector, size_road, color_road)
 
-def draw_mountain_chain(draw, vector): #Olika storlekar på berg längs med vektorn
+def draw_mountain_chain(draw, vector): #Olika storlekar pï¿½ berg lï¿½ngs med vektorn
     pass
 
 def draw_mountain(draw, pos, size, name = None, image = None): #implementera snyggar berg
