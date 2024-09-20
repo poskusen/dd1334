@@ -24,19 +24,21 @@ def draw_map(map):
     villages = []
     for cont in continents:
         rivers = rivers + cont.get_rivers().get_river_list()
-        mountain_chains = mountain_chains + cont.get_mountain_chains()
+        mountain_chains = mountain_chains + cont.get_mountain_chains().get_mountain_chains()
         mountains = mountains + cont.get_mountains().get_mountain_list()
         villages = villages + cont.get_villages().get_cities_list()
         draw_continent(draw, cont)
+
+    #draw_oceans(size_map, image, draw, continents)
 
     for river in rivers:
         draw_river(draw, river)
 
     for city in cities:
-        city_size = city[1]
-        city_pos = city[0]
-        city_name = city[2]
-        draw_city(draw, city_pos, city_size, name = city_name, image = image)
+        #city_size = city[1]
+        city_pos = city
+        #city_name = city[2]
+        draw_city(draw, city_pos, 5, image = image)
 
     for village in villages:
         village_pos = village[0]
@@ -49,13 +51,13 @@ def draw_map(map):
     for mountain_chain in mountain_chains:
         draw_mountain_chain(draw, mountain_chain)
 
-    for mountain in mountains:
-        mountain_pos = mountain[0]
-        mountain_size = mountain[1]
-        mountain_name = mountain[2]
-        draw_mountain(draw, mountain_pos, mountain_size, name = mountain_name, image = image)
+    for mountain in mountains: # Namn på mountains
+        mountain_pos = mountain
+        #mountain_size = mountain[1]
+        #mountain_name = mountain[2]
+        draw_mountain(draw, mountain_pos, 10, image = image)
 
-    #draw_oceans(size_map, image, draw, continents)
+    
     image.show()
     image.save('test_image.png')
 
@@ -138,14 +140,13 @@ def draw_oceans(map_size, image, draw, continents):
 
     areas = []
     for cont in continents:
-        areas.append(cont.get_list_point())
+        areas.append(cont.get_point_list())
 
     for area in areas:
        draw_mask.polygon(area, fill=255)
 
     inverted_mask = img.eval(mask, lambda x: 255 - x)
 
-    
     draw.bitmap((0, 0), inverted_mask, fill="blue")
 
     image.paste("white", (0, 0), mask=mask)
@@ -153,8 +154,8 @@ def draw_oceans(map_size, image, draw, continents):
 
     
 def main():
-    karta = Map(2, 100, 10, 3, 3, 3, 3, mapsize = (1000, 1000))
-    
+    karta = Map(4, 100, 10, 3, 3, 3, 3, mapsize = (1000, 1000))
+
 
     draw_map(karta)
 

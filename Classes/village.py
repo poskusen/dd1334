@@ -44,12 +44,17 @@ class Village:
     def generate_river_village(self):
         """Generates villages near rivers."""
         for _ in range(self.village_river_count):
+            iter = 0
+            max_iter = 100
             while True:
                 river = random.randint(0, self.count_rivers - 1)
                 river_length = len(self.river_lists[river])
 
                 # Ensure there's enough length to select a position
                 if river_length <= 1:
+                    iter += 1
+                    if iter > max_iter:
+                        break
                     continue  # Skip this river if not enough points
 
                 river_pos = random.randint(1, river_length - 1)  # Use range safely

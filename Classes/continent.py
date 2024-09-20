@@ -24,6 +24,9 @@ class Node:
 
     def get_data(self):
         return self.data
+    
+    def get_list_data(self):
+        return [self.data[0], self.data[1]]
 
     def leads_to_end(self, end_node):
         max_iteration = 1000
@@ -91,11 +94,11 @@ class Continent():
         # self.generate()
         while self.intersects_exists():
             self.fix_intersects()
-
+        self.points_list = self.get_point_list(False)
         self.get_extreme_points()
 
     def generate_content(self):
-        self.points_list = self.get_point_list(False)  # Populate points_list
+          # Populate points_list
         self.rivers = River(self.points_list)
         self.villages = Village(self.points_list, self.rivers.river_lists)
         self.mountain_chains = Mountain_chain(self.points_list)
@@ -116,6 +119,9 @@ class Continent():
 
     def get_cities(self):
         return self.cities
+    
+    def get_mountain_chains(self):
+        return self.mountain_chains
 
     def get_size(self):
         size = abs((self.extreme_point[0] - self.extreme_point[2]) * (self.extreme_point[1] - self.extreme_point[3]))
@@ -332,9 +338,10 @@ class Continent():
             return self.extreme_point
 
     def move_continent(self, delta_x, delta_y):
+
         for i in range(0, len(self.points_list)):
-            self.points_list[i][0], self.points_list[i][1] = self.points_list[i][0] + delta_x, self.points_list[i][
-                1] + delta_y
+            self.points_list[i] = (self.points_list[i][0] + delta_x, self.points_list[i][1] + delta_x)
+
 
 
 def test():

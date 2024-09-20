@@ -53,6 +53,9 @@ class Mountain_chain():
         """Checks if a point is inside the continent defined by its vertices."""
         path = Path(self.continent)
         return path.contains_point(point)
+    
+    def get_mountain_chains(self):
+        return self.mountains_list
 
 class Mountain():
     def __init__(self, continent, mountain_scale = 100):

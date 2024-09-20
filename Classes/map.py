@@ -30,15 +30,18 @@ class Map:
             size_continent = random.randint(continent_scale - size_variance, continent_scale + size_variance)
             continent = Continent(self.mapsize, size_continent)
             continent.generate()
-            while continent.get_size() > error_range*2 + error_range or continent.get_size() < error_range*2 - error_range:
+            condition = True
+            #condition = continent.get_size() > error_range*2 + error_range or continent.get_size() < error_range*2 - error_range
+            while condition:
                 continent = Continent(self.mapsize, size_continent)
+                continent.generate()
+                condition = False
             could_place = False
             while not could_place:
                 could_place, move_x, move_y = self.place(continent)
             continent.move_continent(move_x, move_y)
             continent.generate_content()
             self.continent_list.append(continent)
-            print(self.continent_list)
             
     def get_continents(self):
         return self.continent_list
@@ -53,7 +56,6 @@ class Map:
                 return False, None, None
             elif check_edges[1] > edges[1] > check_edges[3] or check_edges[1] > edges[3] > check_edges[3]:
                 return False, None, None
-
         return True, move_x, move_y
 
 
