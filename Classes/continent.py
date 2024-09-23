@@ -329,7 +329,8 @@ class Continent():
             x, y = self.points_list[i]
             self.points_list[i] = (x + delta_x, y + delta_y)
 
-        self.extreme_point = (self.extreme_point[0] + delta_x, self.extreme_point[1] + delta_y, self.extreme_point[2] + delta_x, self.extreme_point[3] + delta_y)
+        #self.extreme_point = (self.extreme_point[0] + delta_x, self.extreme_point[1] + delta_y, self.extreme_point[2] + delta_x, self.extreme_point[3] + delta_y)
+        return self.points_list
 
 
 

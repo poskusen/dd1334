@@ -1,5 +1,6 @@
 from Classes.continent import Continent
 import random
+from matplotlib.path import Path
 
 class Map:
 
@@ -36,9 +37,7 @@ class Map:
                 condition = continent.get_size() > error_range*2 + error_range or continent.get_size() < error_range*2 - error_range
             could_place = False
             while not could_place:
-                could_place, move_x, move_y = self.place(continent)
-
-            continent.move_continent(move_x, move_y)
+                could_place = self.place_good(continent)
 
             continent.generate_content()
             self.continent_list.append(continent)
@@ -46,6 +45,26 @@ class Map:
     def get_continents(self):
         return self.continent_list
     
+
+    def place_good(self, continent):
+        deviation = self.mapsize[0]/5
+        move_x, move_y = random.gauss(0, deviation), random.gauss(0, deviation)
+        point_list = continent.move_continent(move_x, move_y)
+        path_list = Path(point_list)
+        success = True
+        for cont in self.continent_list:
+            check_list = cont.get_point_list()
+            for point in check_list:
+                if path_list.contains_point(point):
+                    continent.move_continent(-move_x, -move_y)
+                    return False
+            if not success:
+                break
+        return True
+
+
+
+
     def place(self, continent):
         edges = continent.get_extreme_points()
         
