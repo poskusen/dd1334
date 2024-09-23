@@ -31,12 +31,12 @@ class Map:
             size_continent = 110
             continent = Continent(self.mapsize, size_continent,riverscale=self.rain_scale,mountainscale=self.mountain_scale,villagescale=self.village_scale)
             continent.generate()
-            condition = True
-            #condition = continent.get_size() > error_range*2 + error_range or continent.get_size() < error_range*2 - error_range
-            while condition:
+            condition = False
+            
+            while not condition:
                 continent = Continent(self.mapsize, size_continent, mountainscale=self.mountain_scale, riverscale=self.river_scale, villagescale=self.village_scale)
                 continent.generate()
-                condition = False
+                condition = continent.get_size() > error_range*2 + error_range or continent.get_size() < error_range*2 - error_range
             could_place = False
             while not could_place:
                 could_place, move_x, move_y = self.place(continent)
@@ -49,7 +49,9 @@ class Map:
     
     def place(self, continent):
         edges = continent.get_extreme_points()
-        move_x, move_y = random.uniform(-1,1)*500, random.uniform(-1,1)*500
+        
+        deviation = self.mapsize[0]/20
+        move_x, move_y = random.gauss(0, deviation), random.gauss(0, deviation)
         edges[0], edges[1], edges[2], edges[3] = edges[0] + move_x, edges[1] + move_y, edges[2] + move_x, edges[3] + move_y
         for cont in self.continent_list:
             check_edges = cont.get_extreme_points()
@@ -57,6 +59,7 @@ class Map:
                 return False, None, None
             elif check_edges[1] > edges[1] > check_edges[3] or check_edges[1] > edges[3] > check_edges[3]:
                 return False, None, None
+
         return True, move_x, move_y
 
 

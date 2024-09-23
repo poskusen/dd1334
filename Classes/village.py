@@ -70,9 +70,11 @@ class Village:
     def generate_coast_village(self):
         """Generates random villages near the coast."""
         for _ in range(self.village_coast_count):
-            while True:
+            iter = 0
+            max_iter = 1000
+            while True and iter < max_iter:
                 coast = self.continent[random.randint(0, self.count_continent_vectors - 1)]
-
+                iter += 1
                 # Check if this village is too close to others
                 if not self.is_too_close(coast):
                     self.village_locations.append(coast)
@@ -81,12 +83,14 @@ class Village:
     def generate_random_villages(self):
         """Generates random villages within the continent boundaries."""
         for _ in range(self.village_random_location_count):
-            while True:
+            iter = 0
+            max_iter = 1000
+            while True and iter < max_iter:
                 # Generate random coordinates
                 x = random.uniform(min(x for x, _ in self.continent), max(x for x, _ in self.continent))
                 y = random.uniform(min(y for _, y in self.continent), max(y for _, y in self.continent))
                 village_coords = (x, y)
-
+                iter += 1
                 # Check if the random coordinates are inside the continent
                 if self.is_point_inside_continent(village_coords):
                     self.village_locations.append(village_coords)

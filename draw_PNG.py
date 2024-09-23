@@ -5,6 +5,7 @@ from Classes.continent import Continent
 from Classes.continent import Node
 from Classes.map import Map
 import time
+import random
 from random import randint
 
 color_text = (255, 255, 255, 0)
@@ -31,6 +32,14 @@ def draw_map(map):
         mountains.extend(cont.get_mountains().get_mountain_list())
         villages.extend(cont.get_villages().get_cities_list())
         draw_continent(draw, cont)  # Draw continents after oceans
+        edges = cont.get_extreme_points()
+        draw_mountain(draw, (edges[0], edges[1]), 10, image = image)
+        draw_mountain(draw, (edges[2], edges[3]), 10, image = image)
+        draw_mountain(draw, (edges[0], edges[3]), 10, image = image)
+        draw_mountain(draw, (edges[2], edges[1]), 10, image = image)
+        image.show()
+
+        
 
     for river in rivers:
         draw_river(draw, river)
@@ -46,9 +55,9 @@ def draw_map(map):
     for mountain in mountains:
         mountain_pos = mountain
         draw_mountain(draw, mountain_pos, 10, image=image)
-
-    image.show()
     image.save('test_image.png')
+    image.show()
+    
 
 
 
@@ -102,10 +111,6 @@ def draw_city(draw, pos, population, name=None, image=None):
     if name is not None:
         draw_text(image, pos, name, 1000, size)  # Optional: Draw the name
 
-
-import random
-
-import random
 
 def draw_river(draw, river):
     # Define colors
@@ -224,7 +229,7 @@ def draw_mountain(draw, pos, size, name=None, image=None):
         (pos[0] - peak_size, pos[1] - size + peak_size),  # Adjusted bottom left vertex
         (pos[0] + peak_size, pos[1] - size + peak_size)   # Adjusted bottom right vertex
     ]
-    draw.polygon(peak_triangle, fill=peak_color)
+    draw.polygon(peak_triangle, fill = peak_color)
 
     if name is not None:
         draw_text(image, pos, name, 1000, size)  # Optional: Draw the name
@@ -250,7 +255,7 @@ def draw_oceans(draw, map_size):
 
 
 def main():
-    karta = Map(6, 50, 50, 50, 50, 50, 50, village_scale=40, mapsize = (1000, 1000))
+    karta = Map(2, 200, 50, 50, 50, 50, 50, village_scale=40, mapsize = (1000, 1000))
     draw_map(karta)
 
 main()

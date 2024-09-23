@@ -60,7 +60,7 @@ class Continent():
         self.size_continent = size_continent
         self.vector_size = 500 * size_continent / mapsize_touple[0]
 
-        self.points_list = []  # Initialize points_list here
+        self.points_list = None  # Initialize points_list here
 
         self.riverscale = riverscale
         self.mountainscale = mountainscale
@@ -98,7 +98,7 @@ class Continent():
         # self.generate()
         while self.intersects_exists():
             self.fix_intersects()
-        self.points_list = self.get_point_list(False)
+        self.points_list = self.get_point_list()
         self.get_extreme_points()
 
     def generate_content(self):
@@ -294,9 +294,9 @@ class Continent():
     def get_start_node(self):
         return self.start_node
 
-    def get_point_list(self, done=True):
+    def get_point_list(self):
         ''' Returns the continent as a list of points, starting with start position and ending with start position'''
-        if not done:
+        if self.points_list is None:
             start_node = self.start_node
             list_nodes = [start_node.get_data()]
             working_node = start_node.get_next()
@@ -304,7 +304,8 @@ class Continent():
                 list_nodes.append(working_node.get_data())
                 working_node = working_node.get_next()
             list_nodes.append(working_node.get_data())
-            return list_nodes
+            self.points_list = list_nodes
+            return self.points_list
         else:
             return self.points_list
 
@@ -313,30 +314,16 @@ class Continent():
         if self.extreme_point is None:
             
             max_x, max_y, min_x, min_y = float('-inf'), float('-inf'), float('inf'), float('inf')
-            start_node = self.start_node
-            value_node = start_node.get_data()
-            if max_x < value_node[0]:
-                max_x = value_node[0]
-            elif min_x > value_node[0]:
-                min_x = value_node[0]
-            if max_y < value_node[1]:
-                max_y = value_node[1]
-            elif min_y > value_node[1]:
-                min_y = value_node[1]
-            working_node = start_node.get_next()
-            value_node = working_node.get_data()
-
-            while value_node is not self.start_pos:
-                if max_x < value_node[0]:
-                    max_x = value_node[0]
-                elif min_x > value_node[0]:
-                    min_x = value_node[0]
-                if max_y < value_node[1]:
-                    max_y = value_node[1]
-                elif min_y > value_node[1]:
-                    min_y = value_node[1]
-                working_node = working_node.get_next()
-                value_node = working_node.get_data()
+            for point in self.points_list:
+                if max_x < point[0]:
+                    max_x = point[0]
+                elif min_x > point[0]:
+                    min_x = point[0]
+                if max_y < point[1]:
+                    max_y = point[1]
+                elif min_y > point[1]:
+                    min_y = point[1]
+            
             self.extreme_point = [max_x, max_y, min_x, min_y]
         else:
             return self.extreme_point
@@ -344,7 +331,10 @@ class Continent():
     def move_continent(self, delta_x, delta_y):
 
         for i in range(0, len(self.points_list)):
-            self.points_list[i] = (self.points_list[i][0] + delta_x, self.points_list[i][1] + delta_x)
+            x, y = self.points_list[i]
+            self.points_list[i] = (x + delta_x, y + delta_y)
+
+        self.extreme_point = (self.extreme_point[0] + delta_x, self.extreme_point[1] + delta_y, self.extreme_point[2] + delta_x, self.extreme_point[3] + delta_y)
 
 
 
