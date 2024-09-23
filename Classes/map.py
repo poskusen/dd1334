@@ -3,16 +3,13 @@ import random
 
 class Map:
 
-    def __init__(self, amount_continents, continent_scale, pop_scale, river_scale, mountain_scale, temp_scale, rain_scale, village_scale, mapsize = (1000, 1000)):
+    def __init__(self, amount_continents, continent_scale , river_scale, mountain_scale, village_scale, mapsize = (1000, 1000)):
         self.mapsize = mapsize
         self.amount_continents = amount_continents
         self.continent_scale = continent_scale    #Generates a number of continents 1-x Based on a scale of 1-100
-        self.pop_scale = pop_scale
         self.river_scale = river_scale
         self.mountain_scale = mountain_scale
         self.village_scale = village_scale
-        self.temp_scale = temp_scale
-        self.rain_scale = rain_scale
         self.continent_list = []
         self.generate_map()
 
@@ -28,8 +25,8 @@ class Map:
         size_variance = 50
 
         for i in range(amount_continents):
-            size_continent = 110
-            continent = Continent(self.mapsize, size_continent,riverscale=self.rain_scale,mountainscale=self.mountain_scale,villagescale=self.village_scale)
+            size_continent = 220*continent_scale/100 #Subject to change
+            continent = Continent(self.mapsize, size_continent,mountainscale=self.mountain_scale,villagescale=self.village_scale, riverscale=self.river_scale)
             continent.generate()
             condition = True
             #condition = continent.get_size() > error_range*2 + error_range or continent.get_size() < error_range*2 - error_range

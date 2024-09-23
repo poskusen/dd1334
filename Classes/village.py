@@ -22,9 +22,9 @@ class Village:
         # Set counts for villages based on the continent size and scale
         if self.village_count is None:
             self.village_count = int(self.count_continent_vectors * 0.8 * self.village_scale / 100)
-            self.village_river_count = max(int(self.village_count * 0.6), 1)  # At least one river village
-            self.village_coast_count = max(int(self.village_count * 0.4), 1)  # At least one coast village
-            self.village_random_location_count = max(int(self.village_count * 0.4), 1)  # At least one random village
+            self.village_river_count = int(self.village_count * 0.6)  # At least one river village
+            self.village_coast_count = int(self.village_count * 0.4)  # At least one coast village
+            self.village_random_location_count = int(self.village_count * 0.4)  # At least one random village
 
         # Check if there are rivers before generating river villages
         if self.count_rivers > 0:
@@ -51,14 +51,14 @@ class Village:
                 river_length = len(self.river_lists[river])
 
                 # Ensure there's enough length to select a position
-                if river_length <= 1:
+                if river_length < 2:
                     iter += 1
                     if iter > max_iter:
-                        break
+
+                        break  # Exit the loop when too many attempts have been made
                     continue  # Skip this river if not enough points
 
                 river_pos = random.randint(1, river_length - 1)  # Use range safely
-
                 river_coords = self.river_lists[river][river_pos]
                 village_coords = (river_coords[0] + random.randint(-1, 1), river_coords[1] + random.randint(-1, 1))
 
@@ -66,6 +66,11 @@ class Village:
                 if not self.is_too_close(village_coords):
                     self.village_locations.append(village_coords)
                     break  # Exit the loop when a valid location is found
+                else:
+                    iter += 1
+                    if iter > max_iter:
+
+                        break
 
     def generate_coast_village(self):
         """Generates random villages near the coast."""

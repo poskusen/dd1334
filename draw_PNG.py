@@ -250,7 +250,7 @@ def draw_oceans(draw, map_size):
 
 
 def main():
-    karta = Map(6, 50, 50, 50, 50, 50, 50, village_scale=40, mapsize = (1000, 1000))
+    karta = Map(10, 50, 50, 50, 50,  mapsize = (1000, 1000)) #50 Is supposed to represent normal values
     draw_map(karta)
 
 main()
