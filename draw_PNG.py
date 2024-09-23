@@ -32,14 +32,6 @@ def draw_map(map):
         mountains.extend(cont.get_mountains().get_mountain_list())
         villages.extend(cont.get_villages().get_cities_list())
         draw_continent(draw, cont)  # Draw continents after oceans
-        edges = cont.get_extreme_points()
-        draw_mountain(draw, (edges[0], edges[1]), 10, image = image)
-        draw_mountain(draw, (edges[2], edges[3]), 10, image = image)
-        draw_mountain(draw, (edges[0], edges[3]), 10, image = image)
-        draw_mountain(draw, (edges[2], edges[1]), 10, image = image)
-        image.show()
-
-        
 
     for river in rivers:
         draw_river(draw, river)
@@ -73,6 +65,7 @@ def draw_continent(draw, continent):
     fill_continent(draw, continent, color=(0, 180, 0))  # Fill with green
 
     list_points = continent.get_point_list()
+
 
     for i in range(0, len(list_points) - 1):
         draw_vector(draw, (list_points[i], list_points[i + 1]), continent_width, colour_continent)
@@ -255,7 +248,7 @@ def draw_oceans(draw, map_size):
 
 
 def main():
-    karta = Map(10, 50, 50, 50, 50,  mapsize = (1000, 1000)) #50 Is supposed to represent normal values
+    karta = Map(1, 50, 50, 50, 50,  mapsize = (1000, 1000)) #50 Is supposed to represent normal values
     draw_map(karta)
 
 main()

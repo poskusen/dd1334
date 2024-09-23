@@ -37,7 +37,9 @@ class Map:
             could_place = False
             while not could_place:
                 could_place, move_x, move_y = self.place(continent)
+
             continent.move_continent(move_x, move_y)
+
             continent.generate_content()
             self.continent_list.append(continent)
             
@@ -47,7 +49,7 @@ class Map:
     def place(self, continent):
         edges = continent.get_extreme_points()
         
-        deviation = self.mapsize[0]/20
+        deviation = self.mapsize[0]/5
         move_x, move_y = random.gauss(0, deviation), random.gauss(0, deviation)
         edges[0], edges[1], edges[2], edges[3] = edges[0] + move_x, edges[1] + move_y, edges[2] + move_x, edges[3] + move_y
         for cont in self.continent_list:
