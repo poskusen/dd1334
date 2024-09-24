@@ -39,7 +39,6 @@ def draw_map(map):
     draw_names = map.draw_village_names()
     if draw_names:
         for village in villages:
-            print(village)
             village_pos = village[0]
             village_size = 1
             village_name = village[1]
@@ -65,7 +64,7 @@ def draw_map(map):
             draw_mountain(draw, mountain_pos, 10, image=image, name = mountain_name)
     draw_realm_name(draw, image, map.get_realm_name(), (width, height))
     image.save('test_image.png')
-    image.show()
+
     
 
 
@@ -274,4 +273,4 @@ def test():
     karta = Map(3, 100, 50, 50, 50,  mapsize = (1000, 1000), mountain_names=mountain_names, village_names=village_names) #50 Is supposed to represent normal values
     draw_map(karta)
 
-test()
+#test()
