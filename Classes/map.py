@@ -56,8 +56,10 @@ class Map:
                 continent_vertices = len(continent.get_point_list())
                 condition = continent_vertices > 20
             could_place = False
+            deviation = 0
             while not could_place:
-                could_place = self.place_good(continent)
+                could_place, deviation_extra = self.place_good(continent, deviation)
+                deviation += deviation_extra
 
             continent.generate_content(mountain_names, village_names)
             self.continent_list.append(continent)
@@ -66,8 +68,8 @@ class Map:
         return self.continent_list
     
 
-    def place_good(self, continent):
-        deviation = self.mapsize[0]/10
+    def place_good(self, continent, deviation_extra):
+        deviation = self.mapsize[0]/10 + deviation_extra
         move_x, move_y = random.gauss(0, deviation), random.gauss(0, deviation)
         point_list = continent.move_continent(move_x, move_y)
         path_list = Path(point_list)
@@ -77,10 +79,10 @@ class Map:
             for point in check_list:
                 if path_list.contains_point(point):
                     continent.move_continent(-move_x, -move_y)
-                    return False
+                    return False, self.mapsize[0]/100
             if not success:
                 break
-        return True
+        return True, 0
 
 
 
