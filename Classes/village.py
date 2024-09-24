@@ -5,7 +5,7 @@ from matplotlib.path import Path
 
 
 class Village:
-    def __init__(self, continent, river_lists, village_scale):
+    def __init__(self, continent, river_lists, village_scale, village_names = []):
         self.continent = continent
         self.river_lists = river_lists
         self.village_scale = village_scale  # Number from 1-100
@@ -32,6 +32,8 @@ class Village:
 
         self.generate_random_villages()
         self.generate_coast_village()
+        if len(village_names) != 0:
+            self.set_names(village_names)
 
     def is_too_close(self, new_location, min_distance=5):
         """Check if new village location is too close to existing villages."""
@@ -108,3 +110,12 @@ class Village:
     
     def get_cities_list(self):
         return self.village_locations
+    
+    def set_names(self, village_names):
+        new_list = []
+        for village in self.village_locations:
+            named_village = [village, random.choice(village_names)]
+            new_list.append(named_village)
+        self.village_locations = new_list
+
+

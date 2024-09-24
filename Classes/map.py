@@ -4,7 +4,7 @@ from matplotlib.path import Path
 
 class Map:
 
-    def __init__(self, amount_continents, continent_scale , river_scale, mountain_scale, village_scale, mapsize = (1000, 1000)):
+    def __init__(self, amount_continents, continent_scale , river_scale, mountain_scale, village_scale, mapsize = (1000, 1000), realm_name = 'Olles balla värld', mountain_names = [], village_names = []):
         self.mapsize = mapsize
         self.amount_continents = amount_continents
         self.continent_scale = continent_scale    #Generates a number of continents 1-x Based on a scale of 1-100
@@ -12,34 +12,54 @@ class Map:
         self.mountain_scale = mountain_scale
         self.village_scale = village_scale
         self.continent_list = []
-        self.generate_map()
+        self.realm_name = realm_name
 
+        if len(mountain_names) != 0:
+            self.draw_mountain_name = True
+        else:
+            self.draw_mountain_name = False
+        if len(village_names) != 0:
+            self.draw_village_name = True
+        else:
+            self.draw_village_name = False
 
+        self.generate_map(mountain_names, village_names)
+
+    def draw_mountain_names(self):
+        return self.draw_mountain_name
+
+    def draw_village_names(self):
+        return self.draw_village_name
+    
     def get_mapsize(self):
         return self.mapsize
     
-    def generate_map(self):
-        self.generate_continents(self.amount_continents, self.continent_scale)
+    def get_realm_name(self):
+        return self.realm_name
     
-    def generate_continents(self, amount_continents, continent_scale):
+    def generate_map(self, mountain_names, village_names):
+        self.generate_continents(self.amount_continents, self.continent_scale, mountain_names, village_names)
+    
+    def generate_continents(self, amount_continents, continent_scale, mountain_names, village_names):
         error_range = continent_scale*continent_scale
         size_variance = 50
 
         for i in range(amount_continents):
-            size_continent = 220*continent_scale/100 #Subject to change
-            continent = Continent(self.mapsize, size_continent,mountainscale=self.mountain_scale,villagescale=self.village_scale, riverscale=self.river_scale)
+            size_continent = 220*continent_scale/100 # Subject to change
+            continent = Continent(self.mapsize, size_continent, mountainscale=self.mountain_scale, villagescale=self.village_scale, riverscale=self.river_scale)
             continent.generate()
             condition = False
             
             while not condition:
                 continent = Continent(self.mapsize, size_continent, mountainscale=self.mountain_scale, riverscale=self.river_scale, villagescale=self.village_scale)
                 continent.generate()
-                condition = continent.get_size() > error_range*2 + error_range or continent.get_size() < error_range*2 - error_range
+                continent_vertices = len(continent.get_point_list())
+                condition = continent_vertices > 20
             could_place = False
             while not could_place:
                 could_place = self.place_good(continent)
 
-            continent.generate_content()
+            continent.generate_content(mountain_names, village_names)
             self.continent_list.append(continent)
             
     def get_continents(self):
@@ -47,7 +67,7 @@ class Map:
     
 
     def place_good(self, continent):
-        deviation = self.mapsize[0]/5
+        deviation = self.mapsize[0]/10
         move_x, move_y = random.gauss(0, deviation), random.gauss(0, deviation)
         point_list = continent.move_continent(move_x, move_y)
         path_list = Path(point_list)

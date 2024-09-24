@@ -58,14 +58,13 @@ class Mountain_chain():
         return self.mountains_list
 
 class Mountain():
-    def __init__(self, continent, mountain_scale):
+    def __init__(self, continent, mountain_scale, mountain_names_select = []):
         self.continent = continent
         self.mountain_scale = mountain_scale
 
         self.big_mountains = []
-
+        self.mountain_names_select = mountain_names_select
         self.mountains_count = int(len(self.continent) * 0.2 * self.mountain_scale/100)
-
         self.generate_big_mountains()
 
     def generate_big_mountains(self):
@@ -78,11 +77,12 @@ class Mountain():
 
                 # Check if the random coordinates are inside the continent
                 if self.is_point_inside_continent(mountain_cords):
-                    self.big_mountains.append(mountain_cords)
-
+                    if len(self.mountain_names_select) != 0:
+                        mountain_name = random.choice(self.mountain_names_select)
+                        self.big_mountains.append((mountain_cords, mountain_name))
+                    else: 
+                        self.big_mountains.append(mountain_cords)
                     break
-
-
 
     def is_point_inside_continent(self, point):
         """Checks if a point is inside the continent defined by its vertices."""
@@ -91,4 +91,5 @@ class Mountain():
 
 
     def get_mountain_list(self):
+        
         return self.big_mountains

@@ -36,17 +36,34 @@ def draw_map(map):
     for river in rivers:
         draw_river(draw, river)
 
-    for village in villages:
-        village_pos = village
-        village_size = village[1]
-        draw_city(draw, village_pos, village_size)
+    draw_names = map.draw_village_names()
+    if draw_names:
+        for village in villages:
+            print(village)
+            village_pos = village[0]
+            village_size = 1
+            village_name = village[1]
+            draw_city(draw, village_pos, village_size, name = village_name, image=image)
+    else:
+        for village in villages:
+            village_pos = village
+            village_size = 1
+            draw_city(draw, village_pos, village_size)
 
     for mountain_chain in mountain_chains:
         draw_mountain_chain(draw, mountain_chain)
 
-    for mountain in mountains:
-        mountain_pos = mountain
-        draw_mountain(draw, mountain_pos, 10, image=image)
+    draw_names = map.draw_mountain_names()
+    if not draw_names:
+        for mountain in mountains:
+            mountain_pos = mountain
+            draw_mountain(draw, mountain_pos, 10, image=image)
+    else:
+        for mountain in mountains:
+            mountain_pos = mountain[0]
+            mountain_name = mountain[1]
+            draw_mountain(draw, mountain_pos, 10, image=image, name = mountain_name)
+    draw_realm_name(draw, image, map.get_realm_name(), (width, height))
     image.save('test_image.png')
     image.show()
     
@@ -69,9 +86,6 @@ def draw_continent(draw, continent):
 
     for i in range(0, len(list_points) - 1):
         draw_vector(draw, (list_points[i], list_points[i + 1]), continent_width, colour_continent)
-
-
-
 
     list_points = continent.get_point_list()
 
@@ -102,7 +116,7 @@ def draw_city(draw, pos, population, name=None, image=None):
 
     # Draw the city name, if provided
     if name is not None:
-        draw_text(image, pos, name, 1000, size)  # Optional: Draw the name
+        draw_text(image, pos, name, (1000, 1000), 1500)  # Optional: Draw the name
 
 
 def draw_river(draw, river):
@@ -225,16 +239,16 @@ def draw_mountain(draw, pos, size, name=None, image=None):
     draw.polygon(peak_triangle, fill = peak_color)
 
     if name is not None:
-        draw_text(image, pos, name, 1000, size)  # Optional: Draw the name
+        draw_text(image, pos, name, (1000,1000), 1500)  # Optional: Draw the name
 
 def draw_vector(draw, vector, size = 2, colour = (255, 0, 0, 255)): # Works
     draw.line(vector, fill = colour, width = size)
     
-def draw_text(image, pos, text, size_canvas, object_size):
-    font_size = int((10/size_canvas)*object_size)
-    font = ImageFont.truetype("arial.ttf", font_size)
+def draw_text(image, pos, text, size_canvas, object_size, font_name = 'arial.ttf', fill = 'black'):
+    font_size = int((10/size_canvas[0])*object_size)
+    font = ImageFont.truetype(font_name, font_size)
     text_draw = ImageDraw.Draw(image)
-    text_draw.text(pos, text, font = font, fill = 'black')
+    text_draw.text(pos, text, font = font, fill = fill)
 
 
 def draw_oceans(draw, map_size):
@@ -245,10 +259,19 @@ def draw_oceans(draw, map_size):
         ocean_color = (0, blue_intensity, 255, 255)
         draw.line([(0, y), (map_size[0], y)], fill=ocean_color)
 
+def draw_realm_name(draw, image, realm_name, size_canvas):
+    pos = (size_canvas[0]/4, size_canvas[1]/50)
+    font_realm = 'C:/Windows/Fonts/LHANDW.ttf'
+    color_realm = 'red'
+    draw_text(image, pos, realm_name, size_canvas, 5000, font_name = font_realm, fill = color_realm)
 
 
-def main():
-    karta = Map(3, 100, 50, 50, 50,  mapsize = (1000, 1000)) #50 Is supposed to represent normal values
+
+
+def test():
+    mountain_names = ['mountain1', 'mountain2', 'mountain3']
+    village_names = ['test1', 'test2', 'test3']
+    karta = Map(3, 100, 50, 50, 50,  mapsize = (1000, 1000), mountain_names=mountain_names, village_names=village_names) #50 Is supposed to represent normal values
     draw_map(karta)
 
-main()
+test()
