@@ -6,7 +6,7 @@ from matplotlib.path import Path
 
 class Mountain_chain():
 
-    def __init__(self, continent, mountain_scale):
+    def __init__(self, continent, mountain_scale, mountain_chain_list = None):
 
         self.continent = continent
         self.mountain_scale = mountain_scale
@@ -14,14 +14,16 @@ class Mountain_chain():
         self.mountains_count = None
 
         self.mountains_list = [] #A list containing lists of the mountain ranges, A position in this list represent a mountain range, that position has a list in it with scattered positions of mountains
+        if mountain_chain_list == None:
+            # Create a Path object from the continent coordinates
+            self.path = Path(self.continent)
 
-        # Create a Path object from the continent coordinates
-        self.path = Path(self.continent)
+            if self.mountains_count is None:
+                self.mountains_count = int(len(self.continent)*0.4*self.mountain_scale/100)
 
-        if self.mountains_count is None:
-            self.mountains_count = int(len(self.continent)*0.4*self.mountain_scale/100)
-
-        self.generate_mountain_range()
+            self.generate_mountain_range()
+        else:
+            self.mountains_list = mountain_chain_list
 
     def generate_mountain_range(self):
         """Generates a number of mountain ranges"""
@@ -58,14 +60,17 @@ class Mountain_chain():
         return self.mountains_list
 
 class Mountain():
-    def __init__(self, continent, mountain_scale, mountain_names_select = []):
+    def __init__(self, continent, mountain_scale, mountain_names_select = [], mountain_list = None):
         self.continent = continent
         self.mountain_scale = mountain_scale
 
         self.big_mountains = []
         self.mountain_names_select = mountain_names_select
         self.mountains_count = int(len(self.continent) * 0.2 * self.mountain_scale/100)
-        self.generate_big_mountains()
+        if mountain_list == None:
+            self.generate_big_mountains()
+        else:
+            self.big_mountains = mountain_list
 
     def generate_big_mountains(self):
         for i in range(self.mountains_count):

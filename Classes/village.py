@@ -5,7 +5,7 @@ from matplotlib.path import Path
 
 
 class Village:
-    def __init__(self, continent, river_lists, village_scale, village_names = []):
+    def __init__(self, continent, river_lists, village_scale, village_names = [], village_pos = None):
         self.continent = continent
         self.river_lists = river_lists
         self.village_scale = village_scale  # Number from 1-100
@@ -18,22 +18,25 @@ class Village:
         self.count_continent_vectors = len(continent)
 
         self.village_locations = []
+        if village_pos == None:
+            # Set counts for villages based on the continent size and scale
+            if self.village_count is None:
+                self.village_count = int(self.count_continent_vectors * 0.8 * self.village_scale / 100)
+                self.village_river_count = int(self.village_count * 0.6)  # At least one river village
+                self.village_coast_count = int(self.village_count * 0.4)  # At least one coast village
+                self.village_random_location_count = int(self.village_count * 0.4)  # At least one random village
 
-        # Set counts for villages based on the continent size and scale
-        if self.village_count is None:
-            self.village_count = int(self.count_continent_vectors * 0.8 * self.village_scale / 100)
-            self.village_river_count = int(self.village_count * 0.6)  # At least one river village
-            self.village_coast_count = int(self.village_count * 0.4)  # At least one coast village
-            self.village_random_location_count = int(self.village_count * 0.4)  # At least one random village
+            # Check if there are rivers before generating river villages
+            if self.count_rivers > 0:
+                self.generate_river_village()
 
-        # Check if there are rivers before generating river villages
-        if self.count_rivers > 0:
-            self.generate_river_village()
+            self.generate_random_villages()
+            self.generate_coast_village()
+            if len(village_names) != 0:
+                self.set_names(village_names)
+        else:
+            self.village_locations = village_pos
 
-        self.generate_random_villages()
-        self.generate_coast_village()
-        if len(village_names) != 0:
-            self.set_names(village_names)
 
     def is_too_close(self, new_location, min_distance=5):
         """Check if new village location is too close to existing villages."""

@@ -4,7 +4,7 @@ from matplotlib.path import Path
 
 class Map:
 
-    def __init__(self, amount_continents, continent_scale, river_scale, mountain_scale, village_scale, mapsize = (1000, 1000), realm_name = 'Olles balla värld', mountain_names = [], village_names = [], create_new = True):
+    def __init__(self, amount_continents, continent_scale, river_scale, mountain_scale, village_scale, mapsize = (1000, 1000), realm_name = 'Olles balla värld', mountain_names = [], village_names = [], create_new = True, continents = None, content_list = None):
         self.mapsize = mapsize
         self.amount_continents = amount_continents
         self.continent_scale = continent_scale    #Generates a number of continents 1-x Based on a scale of 1-100
@@ -25,8 +25,9 @@ class Map:
         if create_new:
             self.generate_map(mountain_names, village_names)
         
+        
     def add_continent(self, continent, content, name):
-        self.continent_list.append(Continent(self.mapsize, 1000, mountainscale=self.mountain_scale, villagescale=self.village_scale, riverscale=self.river_scale, name = name, content=content, point_list=continent))
+        self.continent_list.append(Continent(self.mapsize, 1000, mountainscale=self.mountain_scale, villagescale=self.village_scale, riverscale=self.river_scale, content=content, point_list=continent))
             
 
     def draw_mountain_names(self):
@@ -40,6 +41,9 @@ class Map:
     
     def get_realm_name(self):
         return self.realm_name
+
+    def get_continent_amount(self):
+        return self.amount_continents
     
     def generate_map(self, mountain_names, village_names):
         self.generate_continents(self.amount_continents, self.continent_scale, mountain_names, village_names)

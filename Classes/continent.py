@@ -6,7 +6,7 @@ from Classes.mountain import Mountain_chain
 from Classes.mountain import Mountain
 from Classes.village import Village
 #from roads import Road
-from Classes.city import city
+from test_files.city import city
 
 import matplotlib.pyplot as plt
 
@@ -59,11 +59,12 @@ class Continent():
         self.size_continent = size_continent
         self.vector_size = 500 * size_continent / mapsize_touple[0]
 
-        self.points_list = point_list # Initialize points_list here
-        self.rivers = content[0]
-        self.villages = content[1]
-        self.mountain_chains = content[2]
-        self.mountains = content[3]
+        self.points_list = point_list 
+        if content[0] != None:
+            self.rivers = River(self.point_list, None, river_pos = content[0])
+            self.villages = Village(self.point_list, self.rivers.river_lists, None, village_pos = content[1])
+            self.mountain_chains = Mountain_chain(self.point_list, None, mountain_chain_list = content[2])
+            self.mountains = Mountain(self.points_list, None, mountain_list = content[3])
         self.riverscale = riverscale
         self.mountainscale = mountainscale
         self.villagescale = villagescale
@@ -105,7 +106,7 @@ class Continent():
 
     def generate_content(self,  mountain_names, village_names):
         self.rivers = River(self.points_list, river_scale=self.riverscale)
-        self.villages = Village(self.points_list, self.rivers.river_lists,village_scale=self.villagescale, village_names=village_names)
+        self.villages = Village(self.points_list, self.rivers.river_lists, village_scale=self.villagescale, village_names=village_names)
         self.mountain_chains = Mountain_chain(self.points_list, mountain_scale=self.mountainscale)
         self.mountains = Mountain(self.points_list, mountain_scale=self.mountainscale, mountain_names_select=mountain_names)
 

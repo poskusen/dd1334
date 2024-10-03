@@ -5,23 +5,25 @@ import numpy as np
 from matplotlib.path import Path
 
 class River:
-    def __init__(self, continent, river_scale, size_continent=100):
+    def __init__(self, continent, river_scale, size_continent=100, river_pos = None):
         self.continent = continent
         self.river_scale = river_scale
         self.rivers_count = None
         self.river_lists = []
         self.river_positions = []
         self.river_size = size_continent / self.count_vectors()
+        if river_pos == None:
+            if self.rivers_count is None:
+                river_percent = 0.3 * river_scale / 100
+                self.rivers_count = int(self.count_vectors() * river_percent)
 
-        if self.rivers_count is None:
-            river_percent = 0.3 * river_scale / 100
-            self.rivers_count = int(self.count_vectors() * river_percent)
+            for i in range(self.rivers_count):
+                pos = random.randint(0, (self.count_vectors()) - 1)
+                self.river_positions.append(pos)
 
-        for i in range(self.rivers_count):
-            pos = random.randint(0, (self.count_vectors()) - 1)
-            self.river_positions.append(pos)
-
-        self.generate_river()
+            self.generate_river()
+        else:
+            self.river_lists = river_pos
 
     def generate_river(self):
         """Generates rovers_count rivers and appends them to river_lists"""
