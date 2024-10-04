@@ -40,15 +40,17 @@ class Node:
         else:
             return False
 
-
+#ddawdwad
 class Continent():
     def __init__(self, mapsize_touple, size_continent, riverscale, mountainscale, villagescale, start_pos=None, start_vector=None, circle_vector=None,
-                 name='None', mountain_names = [], village_names = [], point_list = None, content = [None, None, None, None], Loadmap = False):
+                 name='None', mountain_names = [], village_names = [], point_list = None, content = [None, None, None, None], LoadMapp = False):
         self.name = name
         self.mapsize_touple = mapsize_touple
         if start_pos != None:
             self.start_pos = start_pos
             self.start_node = Node(self.start_pos)
+
+
             self.vectors = self.start_node
         else:
             self.start_pos = (500, 500)  # Start position
@@ -60,7 +62,7 @@ class Continent():
         self.vector_size = 500 * size_continent / mapsize_touple[0]
         
         self.points_list = point_list 
-        if Loadmap == True:
+        if LoadMapp == True: 
             self.rivers = River(self.point_list, None, river_pos = content[0])
             self.villages = Village(self.point_list, self.rivers.river_lists, None, village_pos = content[1])
             self.mountain_chains = Mountain_chain(self.point_list, None, mountain_chain_list = content[2])
