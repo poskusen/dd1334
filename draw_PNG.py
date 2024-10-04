@@ -10,7 +10,7 @@ from random import randint
 
 color_text = (255, 255, 255, 0)
 
-def draw_map(map):
+def draw_map(map, image_name = 'test_image.png'):
     (width, height) = map.get_mapsize()
     image = img.new("RGBA", (width, height), color='white')
     draw = ImageDraw.Draw(image)
@@ -63,7 +63,7 @@ def draw_map(map):
             mountain_name = mountain[1]
             draw_mountain(draw, mountain_pos, 10, image=image, name = mountain_name)
     draw_realm_name(draw, image, map.get_realm_name(), (width, height))
-    image.save('test_image.png')
+    image.save(image_name)
 
     
 
