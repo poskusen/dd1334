@@ -63,9 +63,9 @@ class Continent():
         
         self.points_list = point_list 
         if LoadMapp == True: 
-            self.rivers = River(self.point_list, None, river_pos = content[0])
-            self.villages = Village(self.point_list, self.rivers.river_lists, None, village_pos = content[1])
-            self.mountain_chains = Mountain_chain(self.point_list, None, mountain_chain_list = content[2])
+            self.rivers = River(self.points_list, None, river_pos = content[0])
+            self.villages = Village(self.points_list, self.rivers.river_lists, None, village_pos = content[1])
+            self.mountain_chains = Mountain_chain(self.points_list, None, mountain_chain_list = content[2])
             self.mountains = Mountain(self.points_list, None, mountain_list = content[3])
         self.riverscale = riverscale
         self.mountainscale = mountainscale
