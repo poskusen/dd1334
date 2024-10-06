@@ -243,7 +243,7 @@ def draw_mountain(draw, pos, size, name=None, image=None):
 def draw_vector(draw, vector, size = 2, colour = (255, 0, 0, 255)): # Works
     draw.line(vector, fill = colour, width = size)
     
-def draw_text(image, pos, text, size_canvas, object_size, font_name = 'arial.ttf', fill = 'black'):
+def draw_text(image, pos, text, size_canvas, object_size, font_name = 'sans-serif', fill = 'black'):
     font_size = int((10/size_canvas[0])*object_size)
     font = ImageFont.truetype(font_name, font_size)
     text_draw = ImageDraw.Draw(image)
