@@ -265,7 +265,7 @@ def draw_realm_name(draw, image, realm_name, size_canvas):
     pos = (size_canvas[0] / 2, size_canvas[1] / 15)  # Adjusted position for better centering
 
     # Set an epic font (adjust to a decorative font that is available on your system)
-    font_realm = 'C:/Windows/Fonts/ALGER.TTF'  # Example of a more fantasy-style font (like Algerian)
+    font_realm = 'DejaVuSans-Bold.ttf'  # Example of a more fantasy-style font (like Algerian)
 
     # Font size based on the canvas size for epic appearance
     font_size = int(size_canvas[0] / 10)  # Large font size proportional to canvas width
