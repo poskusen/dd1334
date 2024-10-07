@@ -10,7 +10,7 @@ from random import randint
 
 color_text = (255, 255, 255, 0)
 
-def draw_map(map):
+def draw_map(map, image_name = 'test_image.png'):
     (width, height) = map.get_mapsize()
     image = img.new("RGBA", (width, height), color='white')
     draw = ImageDraw.Draw(image)
@@ -63,7 +63,7 @@ def draw_map(map):
             mountain_name = mountain[1]
             draw_mountain(draw, mountain_pos, 10, image=image, name = mountain_name)
     draw_realm_name(draw, image, map.get_realm_name(), (width, height))
-    image.save('test_image.png')
+    image.save(image_name)
 
     
 
@@ -245,7 +245,8 @@ def draw_vector(draw, vector, size = 2, colour = (255, 0, 0, 255)): # Works
     
 def draw_text(image, pos, text, size_canvas, object_size, font_name = 'arial.ttf', fill = 'black'):
     font_size = int((10/size_canvas[0])*object_size)
-    font = ImageFont.truetype(font_name, font_size)
+    font = ImageFont.load_default(font_size)
+    # font = ImageFont.truetype(font_name, font_size)
     text_draw = ImageDraw.Draw(image)
     text_draw.text(pos, text, font = font, fill = fill)
 
