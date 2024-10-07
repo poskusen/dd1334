@@ -261,10 +261,32 @@ def draw_oceans(draw, map_size):
 
 
 def draw_realm_name(draw, image, realm_name, size_canvas):
-    pos = (size_canvas[0]/4, size_canvas[1]/50)
+    pos = (size_canvas[0] / 4, size_canvas[1] / 50)
     font_realm = 'C:/Windows/Fonts/LHANDW.ttf'
-    color_realm = 'grey'
-    draw_text(image, pos, realm_name, size_canvas, 5000, font_name = font_realm, fill = color_realm)
+
+    # Set the color and font size for the realm name
+    color_realm = (255, 215, 0)  # Gold color for the text
+    font_size = int((size_canvas[0] / 100) * 5)  # Dynamic font size based on canvas width
+    font = ImageFont.truetype(font_realm, font_size)
+
+    # Draw a shadow for better contrast
+    shadow_offset = 2
+    draw_text(image, (pos[0] + shadow_offset, pos[1] + shadow_offset), realm_name, size_canvas, 5000,
+              font_name=font_realm, fill=(0, 0, 0, 128))  # Black shadow
+
+    # Draw the main text
+    draw_text(image, pos, realm_name, size_canvas, 5000, font_name=font_realm, fill=color_realm)
+
+
+def draw_text(image, pos, text, size_canvas, object_size, font_name='arial.ttf', fill='black'):
+    font_size = int((10 / size_canvas[0]) * object_size)
+    font = ImageFont.truetype(font_name, font_size)  # Use truetype for better font rendering
+    text_draw = ImageDraw.Draw(image)
+
+    # Measure text size to center it
+    text_width, text_height = text_draw.textsize(text, font=font)
+    text_position = (pos[0] - text_width / 2, pos[1])  # Centering the text
+    text_draw.text(text_position, text, font=font, fill=fill)
 
 
 def test():
