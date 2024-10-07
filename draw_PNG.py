@@ -262,7 +262,7 @@ def draw_oceans(draw, map_size):
 def draw_realm_name(draw, image, realm_name, size_canvas):
     pos = (size_canvas[0]/4, size_canvas[1]/50)
     font_realm = 'C:/Windows/Fonts/LHANDW.ttf'
-    color_realm = 'red'
+    color_realm = 'black'
     draw_text(image, pos, realm_name, size_canvas, 5000, font_name = font_realm, fill = color_realm)
 
 
