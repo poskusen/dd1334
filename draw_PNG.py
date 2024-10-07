@@ -261,32 +261,10 @@ def draw_oceans(draw, map_size):
 
 
 def draw_realm_name(draw, image, realm_name, size_canvas):
-    # Center the title at the top of the canvas
-    pos = (size_canvas[0] / 2, size_canvas[1] / 15)  # Adjusted position for better centering
-
-    # Set an epic font (adjust to a decorative font that is available on your system)
-    font_realm = 'DejaVuSans-Bold.ttf'  # Example of a more fantasy-style font (like Algerian)
-
-    # Font size based on the canvas size for epic appearance
-    font_size = int(size_canvas[0] / 10)  # Large font size proportional to canvas width
-
-    # Create the font object
-    font = ImageFont.truetype(font_realm, font_size)
-
-    # Text color and outline for a more dramatic, fantasy look
-    color_realm = 'black'
-    outline_color = 'gold'  # Gold or other lighter colors for the outline
-
-    # Draw text with outline (first draw the outline, then the main text)
-    for offset in range(-2, 3, 1):
-        draw.text((pos[0] + offset, pos[1] + offset), realm_name, font=font, fill=outline_color)
-
-    # Draw the main text on top of the outline
-    draw.text(pos, realm_name, font=font, fill=color_realm)
-
-    # Optionally add a subtle shadow for depth
-    shadow_offset = (2, 2)
-    draw.text((pos[0] + shadow_offset[0], pos[1] + shadow_offset[1]), realm_name, font=font, fill='gray')
+    pos = (size_canvas[0]/4, size_canvas[1]/50)
+    font_realm = 'C:/Windows/Fonts/LHANDW.ttf'
+    color_realm = 'grey'
+    draw_text(image, pos, realm_name, size_canvas, 5000, font_name = font_realm, fill = color_realm)
 
 
 def test():
