@@ -39,7 +39,7 @@ def draw_map(map, image_name = 'test_image.png'):
         for village in villages:
             village_pos = village
             village_size = 1
-            draw_city(draw, village_pos, village_size, image=image)
+            draw_city(draw, village_pos, image=image)
 
     for mountain_chain in mountain_chains:
         draw_mountain_chain(draw, mountain_chain)
@@ -94,7 +94,6 @@ def draw_city(draw, pos, name=None, image=None):
         (pos[0] + size // 2, pos[1] - size // 2)
     ]
     draw.polygon(roof, fill=roof_color)
-    print(name)
     if name is not None:
         draw_text(image, pos, name, (1000, 1000), 1500)
 
