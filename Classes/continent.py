@@ -5,11 +5,7 @@ from Classes.river import River
 from Classes.mountain import Mountain_chain
 from Classes.mountain import Mountain
 from Classes.village import Village
-#from roads import Road
-from test_files.city import city
-
 import matplotlib.pyplot as plt
-
 
 class Node:
     def __init__(self, data):
@@ -40,7 +36,6 @@ class Node:
         else:
             return False
 
-#ddawdwad
 class Continent():
     def __init__(self, mapsize_touple, size_continent, riverscale, mountainscale, villagescale, start_pos=None, start_vector=None, circle_vector=None,
                  name='None', mountain_names = [], village_names = [], point_list = None, content = [None, None, None, None], LoadMapp = False):
@@ -49,8 +44,6 @@ class Continent():
         if start_pos != None:
             self.start_pos = start_pos
             self.start_node = Node(self.start_pos)
-
-
             self.vectors = self.start_node
         else:
             self.start_pos = (500, 500)  # Start position
@@ -82,8 +75,7 @@ class Continent():
         self.circle_vector = (point, next_point)
         steps_away = 1
 
-        while True:  
-
+        while True:
             point_holder = next_point
             next_point = self.generate_new_point(point, next_point)
             point = point_holder
@@ -99,8 +91,7 @@ class Continent():
                 self.vectors.add_next(self.start_node)
                 self.vectors = self.start_node
                 break
-        # if not self.fix_intersects():
-        # self.generate()
+
         while self.intersects_exists():
             self.fix_intersects()
         self.initiate_point_list()
@@ -335,21 +326,8 @@ class Continent():
         for i in range(0, len(self.points_list)):
             x, y = self.points_list[i]
             self.points_list[i] = (x + delta_x, y + delta_y)
-
-        #self.extreme_point = (self.extreme_point[0] + delta_x, self.extreme_point[1] + delta_y, self.extreme_point[2] + delta_x, self.extreme_point[3] + delta_y)
         return self.points_list
 
-
-
-def test():
-    test_cont = Continent((1500, 1500), 120)
-    test_cont.generate()
-    test_cont.generate_content()  # Generate villages, rivers, and mountains
-
-    test_cont.plot()  # Plot continent, rivers, villages, and mountains
-    
-
-#test()
 
 
 

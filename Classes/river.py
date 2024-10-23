@@ -1,4 +1,3 @@
-import matplotlib.pyplot as plt
 import random
 import math
 import numpy as np
@@ -26,7 +25,7 @@ class River:
             self.river_lists = river_pos
 
     def generate_river(self):
-        """Generates rovers_count rivers and appends them to river_lists"""
+        """Generates rivers_count rivers and appends them to river_lists"""
         for i in range(self.rivers_count):
             temp_river = []
             river_pos = self.river_positions[i]
@@ -49,7 +48,7 @@ class River:
             self.river_lists.append(temp_river)
 
     def generate_xy_pos(self, last_touple, u1, u2):
-        """Genera"""
+        """Generate"""
         while True:
             xrandom = last_touple[0] + random.randint(-5, 5)
             yrandom = last_touple[1] + random.randint(-5, 5)

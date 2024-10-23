@@ -92,7 +92,5 @@ class Mountain():
         path = Path(self.continent)
         return path.contains_point(point)
 
-
     def get_mountain_list(self):
-        
         return self.big_mountains

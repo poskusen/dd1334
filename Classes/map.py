@@ -4,7 +4,7 @@ from matplotlib.path import Path
 
 class Map:
 
-    def __init__(self, amount_continents, continent_scale, river_scale, mountain_scale, village_scale, mapsize = (1000, 1000), realm_name = 'Olles balla värld', mountain_names = [], village_names = [], create_new = True, continents = None, content_list = None):
+    def __init__(self, amount_continents, continent_scale, river_scale, mountain_scale, village_scale, mapsize = (1000, 1000), realm_name = 'Olles balla värld', mountain_names = [], village_names = [], create_new = True):
         self.mapsize = mapsize
         self.amount_continents = amount_continents
         self.continent_scale = continent_scale    #Generates a number of continents 1-x Based on a scale of 1-100
@@ -24,9 +24,8 @@ class Map:
             self.draw_village_name = False
         if create_new:
             self.generate_map(mountain_names, village_names)
-        
-        
-    def add_continent(self, continent, content, name):
+
+    def add_continent(self, continent, content):
         self.continent_list.append(Continent(self.mapsize, 1000, mountainscale=self.mountain_scale, villagescale=self.village_scale, riverscale=self.river_scale, content=content, point_list=continent))
             
 
@@ -109,8 +108,3 @@ class Map:
                 return False, None, None
 
         return True, move_x, move_y
-
-
-
-    
-
