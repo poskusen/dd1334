@@ -94,7 +94,7 @@ def draw_city(draw, pos, name=None, image=None):
         (pos[0] + size // 2, pos[1] - size // 2)
     ]
     draw.polygon(roof, fill=roof_color)
-
+    print(name)
     if name is not None:
         draw_text(image, pos, name, (1000, 1000), 1500)
 
