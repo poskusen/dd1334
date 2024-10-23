@@ -39,7 +39,7 @@ def draw_map(map, image_name = 'test_image.png'):
         for village in villages:
             village_pos = village
             village_size = 1
-            draw_city(draw, village_pos, village_size)
+            draw_city(draw, village_pos, village_size, image=image)
 
     for mountain_chain in mountain_chains:
         draw_mountain_chain(draw, mountain_chain)
