@@ -1,2 +1,2 @@
 # dd1334
-# Kör main.ipynb för porjektet
+# Kör main.ipynb för projektet
